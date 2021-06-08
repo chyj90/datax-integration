@@ -2,7 +2,7 @@ package com.alibaba.datax.core.util.container;
 
 import com.cyj.datax.Application;
 import com.cyj.datax.annotation.UserDef;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 

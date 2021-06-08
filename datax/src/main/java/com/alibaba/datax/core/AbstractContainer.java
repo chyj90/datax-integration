@@ -2,7 +2,7 @@ package com.alibaba.datax.core;
 
 import com.alibaba.datax.common.util.Configuration;
 import com.alibaba.datax.core.statistics.container.communicator.AbstractContainerCommunicator;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * 执行容器的抽象类，持有该容器全局的配置 configuration

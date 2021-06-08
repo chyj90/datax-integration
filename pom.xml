@@ -13,8 +13,8 @@
         <module>arrange</module>
     </modules>
     <properties>
-        <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
-        <spring.cloud-version>Greenwich.SR4</spring.cloud-version>
+        <spring-boot.version>2.4.6</spring-boot.version>
+        <spring.cloud-version>2020.0.3</spring.cloud-version>
         <logback-classic.version>1.2.2</logback-classic.version>
         <slf4j-api.version>1.7.28</slf4j-api.version>
         <commons-lang3-version>3.3.2</commons-lang3-version>

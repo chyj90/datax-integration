@@ -1,7 +1,7 @@
 package com.alibaba.datax.core.util;
 
 import com.alibaba.datax.common.util.Configuration;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 /**
  * Created by jingxing on 14-9-16.

@@ -1,0 +1,13 @@
+
+eureka:
+# enableSelfPreservation: false
+  instance:
+    hostname: eureka1
+  client:
+    service-url:
+      defaultZone: http://euraka2:8672/eureka/,http://euraka3:8673/eureka/
+server:
+  port: 8671
+
+
+

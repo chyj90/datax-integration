@@ -6,7 +6,7 @@ import com.alibaba.datax.common.util.Configuration;
 import com.alibaba.datax.core.statistics.communication.Communication;
 import com.alibaba.datax.core.statistics.communication.CommunicationTool;
 import com.alibaba.datax.dataxservice.face.domain.enums.State;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 public abstract class AbstractRunner {
     private AbstractTaskPlugin plugin;

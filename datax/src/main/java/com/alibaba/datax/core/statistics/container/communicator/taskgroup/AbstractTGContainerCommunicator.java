@@ -6,7 +6,7 @@ import com.alibaba.datax.core.statistics.container.collector.ProcessInnerCollect
 import com.alibaba.datax.core.statistics.container.communicator.AbstractContainerCommunicator;
 import com.alibaba.datax.core.util.container.CoreConstant;
 import com.alibaba.datax.dataxservice.face.domain.enums.State;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 
 import java.util.List;
 import java.util.Map;
