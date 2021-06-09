@@ -1,4 +1,5 @@
 com/cyj/datax/plugin/reader/streamreader/StreamReader$Task.class
+com/cyj/datax/controller/TaskController.class
 com/alibaba/datax/core/util/container/LoadUtil$ContainerType.class
 com/alibaba/datax/common/statistics/VMInfo$GCStatus.class
 com/alibaba/datax/dataxservice/face/domain/enums/State.class

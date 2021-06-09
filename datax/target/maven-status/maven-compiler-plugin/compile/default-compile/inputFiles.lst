@@ -12,6 +12,7 @@
 /Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/alibaba/datax/common/plugin/PluginCollector.java
 /Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/alibaba/datax/core/transport/exchanger/BufferedRecordTransformerExchanger.java
 /Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/alibaba/datax/common/util/RetryUtil.java
+/Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/cyj/datax/controller/TaskController.java
 /Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/alibaba/datax/core/job/scheduler/processinner/StandAloneScheduler.java
 /Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/alibaba/datax/core/transport/transformer/GroovyTransformer.java
 /Users/chengyajie/javaspace/datax-integeration/datax/src/main/java/com/alibaba/datax/core/taskgroup/TaskMonitor.java

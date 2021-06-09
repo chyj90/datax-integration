@@ -1,5 +1,6 @@
 package com.cyj.arrange.controller;
 
+import com.cyj.arrange.feign.DataxClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,4 +14,17 @@ import java.util.List;
 @RequestMapping("test")
 public class TestController {
 
+    @Autowired
+    DataxClient dataxClient;
+    @RequestMapping("/exec")
+    public String exec()
+    {
+        return dataxClient.exec("job/testjob.json");
+    }
+
+    @RequestMapping("/str")
+    public String str()
+    {
+        return "OK";
+    }
 }
