@@ -21,6 +21,7 @@ import java.util.Collection;
 /**
  * Created by chengyajie on 2021/6/9.
  */
+//// TODO: 2021/6/9 增加token超期 
 public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     public TokenAuthenticationFilter(AuthenticationManager authManager) {
         super(authManager);
