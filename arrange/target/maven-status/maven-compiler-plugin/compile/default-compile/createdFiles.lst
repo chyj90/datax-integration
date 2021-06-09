@@ -1,3 +1,10 @@
+com/cyj/arrange/feign/DataxClient.class
+com/cyj/arrange/bean/Result.class
+com/cyj/arrange/config/CustomUserDetailsService.class
 com/cyj/arrange/controller/TestController.class
+com/cyj/arrange/util/ResponseUtil.class
+com/cyj/arrange/config/handler/ForbiddenEntryPoint.class
 com/cyj/arrange/config/SecurityConfig.class
+com/cyj/arrange/config/handler/UnauthorizedEntryPoint.class
+com/cyj/arrange/config/filter/TokenLoginFilter.class
 com/cyj/arrange/Application.class

@@ -1,3 +1,12 @@
 /Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/Application.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/config/CustomUserDetailsService.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/util/ResponseUtil.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/feign/DataxClient.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/config/handler/UnauthorizedEntryPoint.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/config/filter/TokenAuthenticationFilter.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/bean/Result.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/config/handler/ForbiddenEntryPoint.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/util/JwtTokenUtil.java
 /Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/config/SecurityConfig.java
+/Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/config/filter/TokenLoginFilter.java
 /Users/chengyajie/javaspace/datax-integeration/arrange/src/main/java/com/cyj/arrange/controller/TestController.java
