@@ -1,0 +1,7 @@
+server:
+  port: 8901
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka1:8671/eureka/,http://eureka2:8672/eureka/,http://eureka3:8673/eureka/

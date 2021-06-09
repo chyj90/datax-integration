@@ -2,4 +2,4 @@ spring:
   application:
       name: server-datax
   profiles:
-    active: dev
+    active: n2
