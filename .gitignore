@@ -58,7 +58,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-arrange/src/test/
-arrange/target/generated-sources/
-datax/target/generated-sources/
-datax/target/generated-test-sources/
+datax/target/
+arrange/target/
+cloudin-ui/node_modules
