@@ -18,6 +18,7 @@ public class ResponseUtil {
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = null;
         response.setStatus(HttpStatus.OK.value());
+        response.setHeader("Access-Control-Allow-Origin","*");
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         Result result = new Result();
         result.setCode(httpStatus.value());

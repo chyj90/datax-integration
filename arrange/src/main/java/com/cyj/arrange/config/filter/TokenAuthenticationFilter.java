@@ -54,9 +54,9 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         // 获取Token字符串，token 置于 header 里
-        String token = request.getHeader("token");
+        String token = request.getHeader(JwtTokenUtil.TOKEN_KEY);
         if (!StringUtils.hasText(token)) {
-            token = request.getParameter("token");
+            token = request.getParameter(JwtTokenUtil.TOKEN_KEY);
         }
         if (token != null && !"".equals(token.trim())) {
             // 从Token中解密获取用户名

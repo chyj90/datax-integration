@@ -1,0 +1,14 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+      },
+      // 添加vue支持
+      "eslint.validate": [
+        "javascript",
+        "vue",
+        "html"
+      ],
+      "search.exclude": {
+        "**/node_modules": false
+      }
+}
