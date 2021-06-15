@@ -26,6 +26,7 @@
       title="任务详情"
       :visible="visible"
       :confirm-loading="confirmLoading"
+      @cancel="handleCancel"
     >
       <template slot="footer">
         <a-button key="cancel" @click="handleCancel"> 取消 </a-button>

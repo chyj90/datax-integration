@@ -18,8 +18,14 @@ export const asyncRouterMap = [
           {
             path: '/task/datax-task/:pageNo([1-9]\\d*)?',
             name: 'DataxList',
-            component: () => import('@/views/dataxTask/DataxList'),
-            meta: { title: 'datax任务管理', keepAlive: true }
+            component: () => import('@/views/task/DataxList'),
+            meta: { title: 'datax任务模版', keepAlive: true }
+          },
+          {
+            path: '/task/pipeline/:pageNo([1-9]\\d*)?',
+            name: 'PipelineTask',
+            component: () => import('@/views/task/PipelineList'),
+            meta: { title: '任务流水线', keepAlive: true }
           }
         ]
       },
