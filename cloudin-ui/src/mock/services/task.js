@@ -17,7 +17,6 @@ const dataxTaskList = (options) => {
         result.push({
             ID: tmpKey,
             name: '测试模版' + tmpKey,
-            cron: '* 0/4 * * * *',
             owner: 'admin',
             jsonstr: '{"in":"A","out":"B"}'
         }
