@@ -81,6 +81,27 @@ const pipelineTaskDetail = () => {
         ]
     })
 }
+
+const allTask = () => {
+    return builder([
+        {
+            ID: 1,
+            name: '任务1'
+        },
+        {
+            ID: 2,
+            name: '任务3'
+        },
+        {
+            ID: 3,
+            name: '任务3'
+        }, {
+            ID: 4,
+            name: '任务4'
+        }
+    ])
+}
 Mock.mock(/\/task\/datax\/list/, 'get', dataxTaskList)
 Mock.mock(/\/task\/pipeline\/list/, 'get', pipelineList)
 Mock.mock(/\/pipeline\/task\/detail/, 'get', pipelineTaskDetail)
+Mock.mock(/\/task\/all/, 'get', allTask)

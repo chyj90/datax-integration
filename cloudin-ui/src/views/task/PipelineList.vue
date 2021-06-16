@@ -31,6 +31,28 @@
       </span>
     </s-table>
     <a-modal
+      title="选择任务"
+      :visible="selectVisible"
+      @cancel="closeTaskSelect"
+    >
+      <template slot="footer">
+        <a-button key="cancel" @click="closeTaskSelect"> 取消 </a-button>
+        <a-button key="submit" type="primary" @click="addTask"> 保存 </a-button>
+      </template>
+      <a-select
+        show-search
+        placeholder="选择任务"
+        option-filter-prop="children"
+        style="width: 200px"
+        :filter-option="filterOption"
+        @change="chooseTask"
+      >
+        <a-select-option v-for="d in taskOptions" :key="d.ID">
+          {{ d.name }}
+        </a-select-option>
+      </a-select>
+    </a-modal>
+    <a-modal
       title="任务详情"
       :visible="visible"
       :confirm-loading="confirmLoading"
@@ -51,10 +73,16 @@
           <a-input style="display: none" :value="dynamicValidateForm['ID']" />
         </a-form-model-item>
         <a-form-model-item label="流水线描述">
-          <a-input v-model="dynamicValidateForm.name" placeholder="流水线描述" />
+          <a-input
+            v-model="dynamicValidateForm.name"
+            placeholder="流水线描述"
+          />
         </a-form-model-item>
         <a-form-model-item label="Cron">
-          <a-input v-model="dynamicValidateForm.cron" placeholder="Cron表达式" />
+          <a-input
+            v-model="dynamicValidateForm.cron"
+            placeholder="Cron表达式"
+          />
         </a-form-model-item>
         <a-form-model-item
           v-for="(domain, index) in dynamicValidateForm.tasks"
@@ -81,8 +109,8 @@
           />
         </a-form-model-item>
         <a-form-model-item v-bind="formItemLayoutWithOutLabel">
-          <a-button type="dashed" style="width: 60%" @click="addTask">
-            <a-icon type="plus" /> Add field
+          <a-button type="dashed" style="width: 60%" @click="openTaskSelect">
+            <a-icon type="plus" /> 增加任务
           </a-button>
         </a-form-model-item>
       </a-form-model>
@@ -91,7 +119,7 @@
 </template>
 <script>
 import { STable } from '@/components'
-import { getPipelineList, getPipelineTask } from '@/api/task'
+import { getPipelineList, getPipelineTask, getAllTask } from '@/api/task'
 export default {
   components: {
     STable
@@ -99,6 +127,7 @@ export default {
   data () {
     return {
       visible: false,
+      selectVisible: false,
       confirmLoading: false,
       queryParam: {},
       loadData: (parameter) => {
@@ -124,6 +153,7 @@ export default {
           sm: { span: 24, offset: 0 }
         }
       },
+      taskOptions: [],
       dynamicValidateForm: {
         ID: Number,
         name: String,
@@ -131,6 +161,7 @@ export default {
         owner: String,
         tasks: Array
       },
+      taskSelected: {},
       columns: [
         {
           title: 'ID',
@@ -201,7 +232,47 @@ export default {
         this.visible = true
       })
     },
-    addTask () {},
+    addTask () {
+      if (this.taskSelected && this.taskSelected.ID) {
+        var that = this
+        var has = this.dynamicValidateForm.tasks.some(function (
+          value,
+          index,
+          array
+        ) {
+          return value.ID === that.taskSelected.ID
+        })
+        if (has) {
+          this.$notification['error']({
+            message: '错误',
+            description: '该任务已在流水线中',
+            duration: 4
+          })
+        } else {
+          this.dynamicValidateForm.tasks.push(this.taskSelected)
+          this.selectVisible = false
+        }
+      }
+    },
+    openTaskSelect () {
+      getAllTask().then((res) => {
+        this.taskOptions = res
+        this.selectVisible = true
+      })
+    },
+    closeTaskSelect () {
+      this.selectVisible = false
+    },
+    chooseTask (value) {
+      this.taskSelected = this.taskOptions.find((ele) => ele['ID'] === value)
+    },
+    filterOption (input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      )
+    },
     switchStatus (record) {
       record.status = record.status ^ 1
     }

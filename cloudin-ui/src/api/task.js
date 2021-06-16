@@ -3,7 +3,8 @@ import request from '@/utils/request'
 const api = {
     datax_task_list: '/task/datax/list',
     pipe_line_list: '/task/pipeline/list',
-    pipe_task_detail: '/pipeline/task/detail'
+    pipe_task_detail: '/pipeline/task/detail',
+    all_task: '/task/all'
 }
 
 export default api
@@ -27,6 +28,13 @@ export function getPipelineList (parameter) {
 export function getPipelineTask (parameter) {
     return request({
         url: api.pipe_task_detail,
+        method: 'get',
+        params: parameter
+    })
+}
+export function getAllTask (parameter) {
+    return request({
+        url: api.all_task,
         method: 'get',
         params: parameter
     })
