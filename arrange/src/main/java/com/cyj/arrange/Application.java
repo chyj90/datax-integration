@@ -6,6 +6,7 @@ import com.cyj.arrange.election.ElectionNodeOptions;
 import com.cyj.arrange.election.LeaderStateListener;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ import java.net.UnknownHostException;
 @EnableEurekaServer
 @EnableFeignClients
 @Slf4j
+@MapperScan("com.cyj.arrange.mapper")
 public class Application {
     @Value("${election.dataPath}")
     private String dataPath;
