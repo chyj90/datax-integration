@@ -8,3 +8,8 @@ eureka:
     registerWithEureka: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+election:
+  dataPath: /Users/chengyajie/data/dev
+  groupId: cloudin_arrange
+  serverIdStr: 127.0.0.1:9761
+  initialConfStr: 127.0.0.1:9761

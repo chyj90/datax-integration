@@ -1,10 +1,13 @@
 package com.cyj.arrange.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 
@@ -46,5 +49,25 @@ public class JwtTokenUtil {
     public static String getUserRoleFromToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token).getBody();
         return claims.get(userRoleKey).toString();
+    }
+
+    public static boolean validate(String jsonStr) {
+        if (StringUtils.isEmpty(jsonStr))
+        {
+            return false;
+        }
+        JsonElement jsonElement;
+        try {
+            jsonElement = JsonParser.parseString(jsonStr);
+        } catch (Exception e) {
+            return false;
+        }
+        if (jsonElement == null) {
+            return false;
+        }
+        if (!jsonElement.isJsonObject()) {
+            return false;
+        }
+        return true;
     }
 }
