@@ -1,13 +1,9 @@
 package com.cyj.arrange.config.filter;
 
-import com.cyj.arrange.bean.Result;
 import com.cyj.arrange.util.JwtTokenUtil;
 import com.cyj.arrange.util.ResponseUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

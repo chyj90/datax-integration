@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.arrange.mapper.TCiPipelineTaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.cyj.arrange.entry.TCiPipelineTask">
+            <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
+            <result property="pipelineId" column="pipeline_id" jdbcType="INTEGER"/>
+            <result property="taskId" column="task_id" jdbcType="INTEGER"/>
+            <result property="orderNo" column="order_no" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        seq_id,pipeline_id,task_id,
+        order_no
+    </sql>
+</mapper>

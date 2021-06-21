@@ -1,10 +1,7 @@
 package com.cyj.arrange.config.handler;
 
-import com.cyj.arrange.bean.Result;
 import com.cyj.arrange.util.ResponseUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 

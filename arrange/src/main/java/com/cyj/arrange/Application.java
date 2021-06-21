@@ -1,6 +1,9 @@
 package com.cyj.arrange;
 
 import com.alipay.sofa.jraft.entity.PeerId;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.cyj.arrange.election.ElectionNode;
 import com.cyj.arrange.election.ElectionNodeOptions;
 import com.cyj.arrange.election.LeaderStateListener;
@@ -46,6 +49,13 @@ public class Application {
         application.initElectNode();
     }
 
+    // 最新版
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        return interceptor;
+    }
     private void initElectNode()
     {
         final ElectionNodeOptions electionOpts = new ElectionNodeOptions();
