@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = {
     datax_task_list: '/task/datax/list',
     pipe_line_list: '/task/pipeline/list',
-    pipe_task_detail: '/pipeline/task/detail',
+    pipe_task_detail: '/task/pipeline/task/detail',
     all_task: '/task/all'
 }
 

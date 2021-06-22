@@ -9,6 +9,7 @@ import com.cyj.arrange.entry.TCiTask;
 import com.cyj.arrange.mapper.TCiPipelineMapper;
 import com.cyj.arrange.mapper.TCiPipelineTaskMapper;
 import com.cyj.arrange.mapper.TCiTaskMapper;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +92,11 @@ public class TaskService {
     public IPage<TCiTask> queryTaskPager(String taskName,Integer ownerID,int pageNo,int pageSize)
     {
         QueryWrapper<TCiTask> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name",taskName).eq("owner",ownerID);
+        if (StringUtils.isNotEmpty(taskName))
+        {
+            queryWrapper.like("name",taskName);
+        }
+        queryWrapper.eq("owner",ownerID);
         Page<TCiTask> page = new Page<>(pageNo,pageSize);
         return tCiTaskMapper.selectPage(page,queryWrapper);
     }
@@ -107,5 +112,10 @@ public class TaskService {
     public List<TCiPipelineTask> queryPipelineTask(Integer pipelineID)
     {
         return tCiPipelineTaskMapper.selectList(new QueryWrapper<TCiPipelineTask>().eq("pipeline_id",pipelineID));
+    }
+
+    public List<TCiTask> queryAllTask(Integer userID)
+    {
+        return tCiTaskMapper.selectList(new QueryWrapper<TCiTask>().eq("owner",userID));
     }
 }

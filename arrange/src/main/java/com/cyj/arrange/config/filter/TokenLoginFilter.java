@@ -37,27 +37,23 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter{
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+        StringBuffer data = new StringBuffer();
+        String line = null;
+        BufferedReader reader = null;
         try {
-            StringBuffer data = new StringBuffer();
-            String line = null;
-            BufferedReader reader = null;
-            try {
-                reader = req.getReader();
-                while (null != (line = reader.readLine()))
-                    data.append(line);
-            } catch (IOException e) {
-            } finally {
-            }
-            String jsonValue=data.toString();
-            Map<String,String> json=JwtTokenUtil.gson().fromJson(jsonValue,new TypeToken<Map<String,String>>(){}.getType());
-            String username = json.get("username");
-            String password = json.get("password");
-            username = username != null ? username.trim() : "";
-            password = password != null ? password : "";
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>()));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            reader = req.getReader();
+            while (null != (line = reader.readLine()))
+                data.append(line);
+        } catch (IOException e) {
+        } finally {
         }
+        String jsonValue=data.toString();
+        Map<String,String> json=JwtTokenUtil.gson().fromJson(jsonValue,new TypeToken<Map<String,String>>(){}.getType());
+        String username = json.get("username");
+        String password = json.get("password");
+        username = username != null ? username.trim() : "";
+        password = password != null ? password : "";
+        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>()));
     }
 
     /**
@@ -65,7 +61,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter{
      */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        ResponseUtil.writeResult(response,HttpStatus.FORBIDDEN,"登陆失败");
+        ResponseUtil.writeResult(response,HttpStatus.FORBIDDEN,e.getMessage());
     }
 
     /**

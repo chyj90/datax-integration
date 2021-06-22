@@ -40,7 +40,8 @@ public class CustomUserDetailsService implements UserDetailsService{
                 authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
             }
             return new User(username, tSysUser.getPassword(), authorities);
+        }else {
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
-        return null;
     }
 }

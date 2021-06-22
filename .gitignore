@@ -58,8 +58,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-datax/target/
-arrange/target/
+datax/target/*
+arrange/target/*
 cloudin-ui/node_modules
 arrange/src/main/java/generator
 election.dataPath/

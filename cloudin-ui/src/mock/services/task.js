@@ -103,5 +103,5 @@ const allTask = () => {
 }
 Mock.mock(/\/task\/datax\/list/, 'get', dataxTaskList)
 Mock.mock(/\/task\/pipeline\/list/, 'get', pipelineList)
-Mock.mock(/\/pipeline\/task\/detail/, 'get', pipelineTaskDetail)
+Mock.mock(/\/task\/pipeline\/task\/detail/, 'get', pipelineTaskDetail)
 Mock.mock(/\/task\/all/, 'get', allTask)
