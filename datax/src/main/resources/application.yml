@@ -3,3 +3,6 @@ spring:
       name: server-datax
   profiles:
     active: dev
+eureka:
+  client:
+    enabled: false

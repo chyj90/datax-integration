@@ -27,7 +27,6 @@ import java.net.UnknownHostException;
  * Created by chengyajie on 2021/6/7.
  */
 @SpringBootApplication
-@EnableEurekaServer
 @EnableFeignClients
 @Slf4j
 @MapperScan("com.cyj.arrange.mapper")

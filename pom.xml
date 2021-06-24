@@ -25,7 +25,10 @@
         <jjwt-version>0.9.0</jjwt-version>
         <postgresql-version>42.2.22</postgresql-version>
         <mysql-version>8.0.23</mysql-version>
+        <datax.mysql.version>5.1.47</datax.mysql.version>
+        <postgresql-version>42.2.19</postgresql-version>
         <mybatis-plus-version>3.4.3.1</mybatis-plus-version>
+        <druid-version>1.0.15</druid-version>
         <java.version>1.8</java.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

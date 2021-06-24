@@ -1,0 +1,54 @@
+{
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 1
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "oraclereader",
+          "parameter": {
+            "username": "bcmatm",
+            "password": "bcmatm",
+            "column": [
+              "*"
+            ],
+            "connection": [
+              {
+                "table": [
+                  "T_CRM_OPEN_CALC_DETAIL"
+                ],
+                "jdbcUrl": [
+                  "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.0.221)(PORT=9001))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=nmsvip)))"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "postgresqlwriter",
+          "parameter": {
+            "username": "xtjc",
+            "password": "xtjc",
+            "column": [
+              "*"
+            ],
+            "preSql": [
+              "delete from T_CRM_OPEN_CALC_DETAIL"
+            ],
+            "connection": [
+              {
+                "jdbcUrl": "jdbc:postgresql://192.9.100.142:25431/bcmatm?currentSchema=bcmatm",
+                "table": [
+                  "T_CRM_OPEN_CALC_DETAIL"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

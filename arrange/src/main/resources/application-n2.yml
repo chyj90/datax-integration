@@ -1,6 +1,5 @@
 
 eureka:
-# enableSelfPreservation: false
   instance:
     hostname: eureka2
   client:
