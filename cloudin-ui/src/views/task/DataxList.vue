@@ -4,7 +4,7 @@
     <s-table
       ref="table"
       size="default"
-      rowKey="ID"
+      rowKey="seqId"
       :columns="columns"
       :data="loadData"
       showPagination="auto"
@@ -15,10 +15,10 @@
             title="删除此任务？"
             @confirm="() => onDelete(record.key)"
           >
-            <a href="javascript:;">删除</a>
+            <a-button type="danger" size="small">删除</a-button>
           </a-popconfirm>
           <a-divider type="vertical" />
-          <a @click="handleEdit(record)">编辑</a>
+          <a-button @click="handleEdit(record)" type="primary" size="small">编辑</a-button>
         </template>
       </span>
     </s-table>
@@ -27,6 +27,7 @@
       :visible="visible"
       :confirm-loading="confirmLoading"
       @cancel="handleCancel"
+      width="820px"
     >
       <template slot="footer">
         <a-button key="cancel" @click="handleCancel"> 取消 </a-button>
@@ -43,15 +44,12 @@
         </a-form-model-item>
         <a-form-model-item label="Json">
           <a-row>
-            <a-col :span="12">
-              <a-textarea
-                v-model="form.jsonstr"
-                placeholder="任务详情"
-                :auto-size="{ minRows: 8, maxRows: 8 }"
+            <a-col :span="24">
+              <vue-json-editor
+                v-model="form.jsonStr"
+                :showBtns="false"
+                lang="zh"
               />
-            </a-col>
-            <a-col :span="12">
-              <json-viewer :value="formatJSON" style="height:200px;overflow:scroll;"></json-viewer>
             </a-col>
           </a-row>
         </a-form-model-item>
@@ -61,52 +59,47 @@
 </template>
 <script>
 import { STable } from '@/components'
-import { getDataxTaskList } from '@/api/task'
-import JsonViewer from 'vue-json-viewer'
+import { getDataxTaskList, saveTask } from '@/api/task'
+import vueJsonEditor from 'vue-json-editor'
 export default {
   components: {
     STable,
-    JsonViewer
+    vueJsonEditor
   },
   data () {
     return {
       visible: false,
-      formatJSON: [],
       confirmLoading: false,
       form: {
-        ID: '',
+        seqId: '',
         name: '',
-        owner: '',
-        jsonstr: ''
+        jsonStr: ''
       },
       queryParam: {},
       loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         console.log('loadData request parameters:', requestParameters)
         return getDataxTaskList(requestParameters).then((res) => {
+          console.log(res)
           return res
         })
       },
       columns: [
         {
           title: 'ID',
-          dataIndex: 'ID',
-          width: '15%'
+          dataIndex: 'seqId',
+          width: '8%'
         },
         {
           title: '任务描述',
           dataIndex: 'name',
-          width: '15%'
-        },
-        {
-          title: '所属用户',
-          dataIndex: 'owner',
-          width: '15%'
+          width: '18%'
         },
         {
           title: 'Json',
-          dataIndex: 'jsonstr',
-          width: '30%'
+          dataIndex: 'jsonStr',
+          width: '55%',
+          ellipsis: true
         },
         {
           title: '操作',
@@ -118,22 +111,15 @@ export default {
   },
   computed: {},
   watch: {
-    'form.jsonstr': function (newVal, oldVal) {
-      var jsonRS = []
-      try {
-          jsonRS = JSON.parse(newVal)
-      } catch (error) {
-      }
-      this.formatJSON = jsonRS
-    }
   },
   methods: {
     handleOk (e) {
       this.confirmLoading = true
-      setTimeout(() => {
+      this.postTask(() => {
         this.visible = false
         this.confirmLoading = false
-      }, 2000)
+        this.$refs.table.refresh()
+      })
     },
     handleCancel (e) {
       this.visible = false
@@ -142,18 +128,28 @@ export default {
     handleAdd () {
       this.visible = true
       this.form = {
-        ID: '',
+        seqId: '',
         name: '',
-        owner: '',
-        jsonstr: ''
+        jsonStr: ''
       }
     },
     handleEdit (record) {
-      this.form = record
-      console.log(this.form)
+      this.form = Object.assign({}, record)
+      this.form.jsonStr = JSON.parse(record.jsonStr)
       this.visible = true
     },
-    saveTask () {}
+    postTask (callback) {
+      const parameter = {
+        seqId: this.form.seqId,
+        name: this.form.name,
+        jsonStr: this.form.jsonStr
+      }
+      parameter.jsonStr = JSON.stringify(parameter.jsonStr)
+      saveTask(parameter).then((res) => {
+          this.$message.info('保存成功')
+          callback()
+        })
+    }
   }
 }
 </script>
@@ -161,8 +157,13 @@ export default {
 .editable-add-btn {
   margin-bottom: 8px;
 }
-.jv-container .jv-code {
-  overflow: scroll;
-  padding: 0px 20px;
+.ant-form-item{
+  margin-bottom: 0px;
+}
+.ant-modal-body{
+  padding-top: 2px;
+}
+.jsoneditor-poweredBy{
+  display: none;
 }
 </style>

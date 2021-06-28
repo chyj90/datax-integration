@@ -11,15 +11,12 @@
         :active-key="customActiveKey"
         :tab-bar-style="{ textAlign: 'center', borderBottom: 'unset' }"
       >
-        <a-tab-pane
-          key="tab1"
-          tab="账号密码登录"
-        >
+        <a-tab-pane key="tab1" tab="账号密码登录">
           <a-alert
             v-if="isLoginError"
             type="error"
             show-icon
-            style="margin-bottom: 24px;"
+            style="margin-bottom: 24px"
             message="账户或密码错误"
           />
           <a-form-item>
@@ -29,7 +26,7 @@
               placeholder="账户"
               v-decorator="[
                 'username',
-                {rules: [{ required: true, message: '请输入帐户名' }, { validator: handleUsername }], validateTrigger: 'change'}
+                {rules: [{ required: true, message: '请输入帐户名' }, { validator: handleUsername }], validateTrigger: 'change',initialValue:'admin'}
               ]"
             >
               <a-icon
@@ -46,7 +43,7 @@
               placeholder="密码"
               v-decorator="[
                 'password',
-                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
+                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur',initialValue:'admin123'}
               ]"
             >
               <a-icon
@@ -58,7 +55,7 @@
           </a-form-item>
         </a-tab-pane>
       </a-tabs>
-      <a-form-item style="margin-top:24px">
+      <a-form-item style="margin-top: 24px">
         <a-button
           size="large"
           type="primary"
@@ -79,8 +76,7 @@ import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
 
 export default {
-  components: {
-  },
+  components: {},
   data () {
     return {
       customActiveKey: 'tab1',
@@ -95,8 +91,7 @@ export default {
       }
     }
   },
-  created () {
-  },
+  created () {},
   methods: {
     ...mapActions(['Login']),
     // handler
@@ -119,7 +114,7 @@ export default {
           const loginParams = { ...values }
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
-            .catch(err => this.requestFailed(err))
+            .catch((err) => this.requestFailed(err))
             .finally(() => {
               state.loginBtn = false
             })
@@ -146,7 +141,9 @@ export default {
       this.isLoginError = true
       this.$notification['error']({
         message: '错误',
-        description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
+        description:
+          ((err.response || {}).data || {}).message ||
+          '请求出现错误，请稍后再试',
         duration: 4
       })
     }

@@ -1,14 +1,19 @@
 import router from './router'
 import store from './store'
+import storage from 'store'
+import { ACCESS_TOKEN } from '@/store/const-value'
 import NProgress from 'nprogress' // progress bar
 import '@/components/NProgress/nprogress.less' // progress bar custom style
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
-
+const loginRoutePath = '/user/login'
+const whiteList = ['login']
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  if (store.getters.addRouters && store.getters.addRouters.length === 0) {
-    store.dispatch('GenerateRoutes', { roles: {} }).then(() => {
+  console.log(storage.get(ACCESS_TOKEN))
+  if (storage.get(ACCESS_TOKEN)) {
+    if (store.getters.addRouters && store.getters.addRouters.length === 0) {
+      store.dispatch('GenerateRoutes', { roles: {} }).then(() => {
         // 根据roles权限生成可访问的路由表
         // 动态添加可访问路由表
         router.addRoutes(store.getters.addRouters)
@@ -22,8 +27,17 @@ router.beforeEach((to, from, next) => {
           next({ path: redirect })
         }
       })
+    } else {
+      next()
+    }
   } else {
-    next()
+    if (whiteList.includes(to.name)) {
+      // 在免登录白名单，直接进入
+      next()
+    } else {
+      next({ path: loginRoutePath, query: { redirect: to.fullPath } })
+      NProgress.done()
+    }
   }
 })
 

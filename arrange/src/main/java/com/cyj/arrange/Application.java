@@ -1,6 +1,5 @@
 package com.cyj.arrange;
 
-import com.alipay.sofa.jraft.entity.PeerId;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -8,7 +7,6 @@ import com.cyj.arrange.config.cron.CronTaskRegistrar;
 import com.cyj.arrange.election.ElectionNode;
 import com.cyj.arrange.election.ElectionNodeOptions;
 import com.cyj.arrange.election.LeaderStateListener;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -16,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -73,7 +70,7 @@ public class Application {
             public void onLeaderStart(long leaderTerm) {
                log.info("[ElectionBootstrap] Leader start");
                 CronTaskRegistrar registrar = context.getBean(CronTaskRegistrar.class);
-                registrar.initScheduleTask();
+                //registrar.initScheduleTask();
             }
 
             @Override

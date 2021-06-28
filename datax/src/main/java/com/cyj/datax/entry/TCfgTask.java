@@ -28,7 +28,7 @@ public class TCfgTask implements Serializable {
     /**
      * 任务详情
      */
-    private String json;
+    private String jsonStr;
 
     /**
      * 对应t_ci_user表seq_id

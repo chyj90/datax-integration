@@ -4,7 +4,7 @@
     <s-table
       ref="table"
       size="default"
-      rowKey="ID"
+      rowKey="seqId"
       :columns="columns"
       :data="loadData"
       showPagination="auto"
@@ -76,15 +76,18 @@
           <a-input
             v-model="dynamicValidateForm.name"
             placeholder="流水线描述"
+            :disabled="!addTaskShow"
           />
         </a-form-model-item>
         <a-form-model-item label="Cron">
           <a-input
             v-model="dynamicValidateForm.cron"
             placeholder="Cron表达式"
+            :disabled="!addTaskShow"
           />
         </a-form-model-item>
         <a-form-model-item
+          v-show="addTaskShow"
           v-for="(domain, index) in dynamicValidateForm.tasks"
           :key="domain.ID"
           :label="index === 0 ? '任务' : ''"
@@ -129,6 +132,7 @@ export default {
       visible: false,
       selectVisible: false,
       confirmLoading: false,
+      addTaskShow: false,
       queryParam: {},
       loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
@@ -165,7 +169,7 @@ export default {
       columns: [
         {
           title: 'ID',
-          dataIndex: 'ID',
+          dataIndex: 'seqId',
           width: '15%'
         },
         {
@@ -219,6 +223,7 @@ export default {
     onDelete (key) {},
     handleAdd () {
       this.visible = true
+      this.addTaskShow = false
       this.dynamicValidateForm = {
         name: '',
         cron: '',
@@ -229,6 +234,7 @@ export default {
     handleEdit (record) {
       getPipelineTask().then((res) => {
         this.dynamicValidateForm = res
+        this.addTaskShow = true
         this.visible = true
       })
     },

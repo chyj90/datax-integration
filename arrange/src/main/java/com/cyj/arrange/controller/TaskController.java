@@ -32,7 +32,7 @@ public class TaskController {
 
     @RequestMapping("/datax/list")
     @ResponseBody
-    public Result taskListPagion(@RequestParam("name") String taskName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
+    public Result taskListPagion(@RequestParam(value = "name",required = false) String taskName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
         String username = SecurityUtil.userName();
         Integer userID = sysService.userID(username);
         if (userID!=null)
@@ -46,7 +46,7 @@ public class TaskController {
 
     @RequestMapping("/pipeline/list")
     @ResponseBody
-    public Result pipelineListPagion(@RequestParam("name") String pipelineName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
+    public Result pipelineListPagion(@RequestParam(value = "name",required = false) String pipelineName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
         String username = SecurityUtil.userName();
         Integer userID = sysService.userID(username);
         if (userID!=null)
@@ -76,7 +76,10 @@ public class TaskController {
     @ResponseBody
     public Result saveTask(@RequestBody String request)
     {
+        String username = SecurityUtil.userName();
+        Integer userID = sysService.userID(username);
         TCfgTask task = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgTask>(){}.getType());
+        task.setOwner(userID);
         taskService.saveTask(task);
         return new Result().setMessage("保存成功");
     }
@@ -85,7 +88,10 @@ public class TaskController {
     @ResponseBody
     public Result savePipeline(@RequestBody String request)
     {
+        String username = SecurityUtil.userName();
+        Integer userID = sysService.userID(username);
         TCfgPipeline pipeline = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgPipeline>(){}.getType());
+        pipeline.setOwner(userID);
         pipeline.setStatus(true);
         taskService.savePipeline(pipeline);
         return new Result().setMessage("保存成功");

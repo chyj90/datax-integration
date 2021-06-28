@@ -2,6 +2,7 @@ package com.cyj.arrange.config.filter;
 
 import com.cyj.arrange.util.JwtTokenUtil;
 import com.cyj.arrange.util.ResponseUtil;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,8 +31,8 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         //不需要鉴权
-        String uri=request.getRequestURI().toString();
-        if ("/".equals(uri)||uri.contains("eureka")||uri.equals("/login")) {
+        String uri=request.getRequestURI();
+        if (HttpMethod.OPTIONS.name().equals(request.getMethod())||"/".equals(uri)||uri.contains("eureka")||uri.equals("/login")) {
             chain.doFilter(request, response);
         }else
         {

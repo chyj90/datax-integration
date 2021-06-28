@@ -7,12 +7,12 @@
     <resultMap id="BaseResultMap" type="com.cyj.datax.entry.TCfgTask">
             <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="json" column="json" jdbcType="VARCHAR"/>
+            <result property="json" column="json_str" jdbcType="VARCHAR"/>
             <result property="owner" column="owner" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        seq_id,name,json,
+        seq_id,name,json_str,
         owner
     </sql>
 </mapper>
