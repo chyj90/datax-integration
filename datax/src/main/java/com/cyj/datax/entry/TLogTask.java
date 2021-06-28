@@ -1,41 +1,50 @@
-package com.cyj.arrange.entry;
+package com.cyj.datax.entry;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
- * 流水线-任务关系表
- * @TableName t_ci_pipeline_task
+ * 任务日志表
+ * @TableName t_log_task
  */
-@TableName(value ="t_ci_pipeline_task")
-@Accessors(chain = true)
+@TableName(value ="t_log_task")
 @Data
-public class TCiPipelineTask implements Serializable {
+public class TLogTask implements Serializable {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
-    private Integer seqId;
+    private Long seqId;
 
     /**
-     * 流水线id
+     * 流水线日志表id
      */
-    private Integer pipelineId;
+    private Long pipelineLogId;
 
     /**
-     * 任务id
+     * 任务配置表ID
      */
     private Integer taskId;
 
     /**
-     * 执行顺序
+     * 任务开始时间
      */
-    private Integer orderNo;
+    private Date startTime;
+
+    /**
+     * 任务结束时间
+     */
+    private Date endTime;
+
+    /**
+     * 任务结束详情
+     */
+    private String finishDetail;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

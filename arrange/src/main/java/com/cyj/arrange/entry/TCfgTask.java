@@ -9,11 +9,11 @@ import lombok.Data;
 
 /**
  * 任务表
- * @TableName t_ci_task
+ * @TableName t_cfg_task
  */
-@TableName(value ="t_ci_task")
+@TableName(value ="t_cfg_task")
 @Data
-public class TCiTask implements Serializable {
+public class TCfgTask implements Serializable {
     /**
      * 主键
      */

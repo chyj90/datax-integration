@@ -1,8 +1,9 @@
 package com.cyj.arrange.config.cron;
 
-import com.cyj.arrange.Application;
-import com.cyj.arrange.feign.DataxClient;
-import com.cyj.arrange.util.JwtTokenUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cyj.arrange.entry.TCfgPipeline;
+import com.cyj.arrange.mapper.TCfgPipelineMapper;
+import com.cyj.arrange.service.ScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.scheduling.config.ScheduledTask;
 import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -24,20 +26,40 @@ public class CronTaskRegistrar implements DisposableBean {
     @Autowired
     private TaskScheduler taskScheduler;
 
+    @Autowired
+    ScheduleService scheduleService;
+
+    @Autowired
+    TCfgPipelineMapper pipelineMapper;
+
     private Map<Integer,ScheduledFuture> scheduledTasks = new ConcurrentHashMap<>();
 
-    public void addDataxTask(Integer taskID,final String json, String cronExpression) {
-        removeCronTask(taskID);
+    public void initScheduleTask()
+    {
+        disposeScheduleTask();
+        List<TCfgPipeline> pipelines = pipelineMapper.selectList(new QueryWrapper<TCfgPipeline>().eq("status",true));
+        pipelines.forEach(this::addPipelineSchedule);
+    }
+
+    public void disposeScheduleTask()
+    {
+        for (ScheduledFuture future:scheduledTasks.values())
+        {
+            if (future!=null)
+            {
+                future.cancel(false);
+            }
+        }
+        scheduledTasks.clear();
+    }
+
+    public void addPipelineSchedule(TCfgPipeline cfgPipeline) {
+        removeCronTask(cfgPipeline.getSeqId());
         CronTask cronTask = new CronTask(()->{
-            /*if (JwtTokenUtil.validate(json)) {
-                ApplicationContext context = Application.getContext();
-                DataxClient client = context.getBean(DataxClient.class);
-                client.exec(json);
-            }*/
-            log.info(taskID+":"+cronExpression);
-        },cronExpression);
+            scheduleService.startPipeline(cfgPipeline.getSeqId());
+        },cfgPipeline.getCron());
         ScheduledFuture future = scheduleCronTask(cronTask);
-        scheduledTasks.put(taskID,future);
+        scheduledTasks.put(cfgPipeline.getSeqId(),future);
     }
 
     public void removeCronTask(Integer taskID) {

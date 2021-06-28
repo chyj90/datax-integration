@@ -1,12 +1,15 @@
 package com.cyj.arrange.service;
 
-import com.cyj.arrange.entry.TCiPipelineLog;
-import com.cyj.arrange.entry.TCiTask;
-import com.cyj.arrange.entry.TCiTaskLog;
-import com.cyj.arrange.mapper.TCiPipelineLogMapper;
-import com.cyj.arrange.mapper.TCiTaskLogMapper;
-import com.cyj.arrange.mapper.TCiTaskMapper;
+import com.cyj.arrange.entry.TCfgTask;
+import com.cyj.arrange.entry.TLogPipeline;
+import com.cyj.arrange.entry.TLogTask;
+import com.cyj.arrange.mapper.TCfgTaskMapper;
+import com.cyj.arrange.mapper.TLogPipelineMapper;
+import com.cyj.arrange.mapper.TLogTaskMapper;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,32 +20,45 @@ import java.util.List;
 public class ScheduleService {
 
     @Autowired
-    TCiTaskMapper tCiTaskMapper;
+    TCfgTaskMapper tCfgTaskMapper;
 
     @Autowired
-    TCiPipelineLogMapper tCiPipelineLogMapper;
+    TLogPipelineMapper tLogPipelineMapper;
 
     @Autowired
-    TCiTaskLogMapper tCiTaskLogMapper;
+    TLogTaskMapper tLogTaskMapper;
     /**
      *  启动流水线
      */
     @Transactional
     public void startPipeline(Integer pipelineID)
     {
-        List<TCiTask> tasks = tCiTaskMapper.findTaskByPipelineID(pipelineID);
+        List<TCfgTask> tasks = tCfgTaskMapper.findTaskByPipelineID(pipelineID);
         if (tasks!=null&&tasks.size()>0)
         {
             Date startTime = new Date();
-            TCiPipelineLog pipelineLog = new TCiPipelineLog();
-            pipelineLog.setPipelineId(pipelineID).setStartTime(startTime);
-            tCiPipelineLogMapper.insert(pipelineLog);
-            for (TCiTask task:tasks)
+            TLogPipeline pipelineLog = new TLogPipeline();
+            pipelineLog.setPipelineId(pipelineID).setStartTime(startTime).setStatus(false);
+            tLogPipelineMapper.insert(pipelineLog);
+            for (TCfgTask task:tasks)
             {
-                TCiTaskLog taskLog = new TCiTaskLog();
+                TLogTask taskLog = new TLogTask();
                 taskLog.setPipelineLogId(pipelineLog.getSeqId()).setTaskId(task.getSeqId());
-                tCiTaskLogMapper.insert(taskLog);
+                tLogTaskMapper.insert(taskLog);
             }
         }
+    }
+
+    /**
+     * 1点清除半年历史数据
+     */
+    @Scheduled(cron = "0 0 1 * * ?")
+    @Transactional
+    public void clearHalfYearHistory()
+    {
+        Date startTime = DateUtils.addMonths(new Date(),-6);
+        String param = DateFormatUtils.format(startTime,"yyyy-MM-dd HH:mm:ss");
+        tLogTaskMapper.deleteTaskHalfYear(param);
+        tLogPipelineMapper.deletePipelineHalfYear(param);
     }
 }

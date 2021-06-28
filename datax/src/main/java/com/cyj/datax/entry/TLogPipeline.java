@@ -1,42 +1,43 @@
-package com.cyj.arrange.entry;
+package com.cyj.datax.entry;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 
 /**
- * 流水线配置表
- * @TableName t_ci_pipeline
+ * 流水线执行日志表
+ * @TableName t_log_pipeline
  */
-@TableName(value ="t_ci_pipeline")
+@TableName(value ="t_log_pipeline")
 @Data
-public class TCiPipeline implements Serializable {
+public class TLogPipeline implements Serializable {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
-    private Integer seqId;
+    private Long seqId;
 
     /**
-     * 流水线名称
+     * 流水线配置表主键
      */
-    private String name;
+    private Integer pipelineId;
 
     /**
-     * cron表达式
+     * 流水线开始时间
      */
-    private String cron;
+    private Date startTime;
 
     /**
-     * 所有者 对应t_ci_name seq_id
+     * 流水线结束时间
      */
-    private Integer owner;
+    private Date endTime;
 
     /**
-     * 开始状态 0：关闭 1：开启
+     * 0 未完成 1 完成
      */
     private Boolean status;
 

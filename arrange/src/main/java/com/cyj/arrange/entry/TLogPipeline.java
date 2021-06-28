@@ -4,24 +4,25 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * 流水线执行日志表
- * @TableName t_ci_pipeline_log
+ * @TableName t_log_pipeline
  */
-@TableName(value ="t_ci_pipeline_log")
-@Accessors(chain = true)
+@TableName(value ="t_log_pipeline")
 @Data
-public class TCiPipelineLog implements Serializable {
+@Accessors(chain = true)
+public class TLogPipeline implements Serializable {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
-    private Integer seqId;
+    private Long seqId;
 
     /**
      * 流水线配置表主键
@@ -37,6 +38,11 @@ public class TCiPipelineLog implements Serializable {
      * 流水线结束时间
      */
     private Date endTime;
+
+    /**
+     * 0 未完成 1 完成
+     */
+    private Boolean status;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

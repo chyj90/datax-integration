@@ -1,8 +1,8 @@
 package com.cyj.arrange.controller;
 
 import com.cyj.arrange.bean.Result;
-import com.cyj.arrange.entry.TCiPipeline;
-import com.cyj.arrange.entry.TCiTask;
+import com.cyj.arrange.entry.TCfgPipeline;
+import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.service.SysService;
 import com.cyj.arrange.service.TaskService;
 import com.cyj.arrange.util.JwtTokenUtil;
@@ -76,7 +76,7 @@ public class TaskController {
     @ResponseBody
     public Result saveTask(@RequestBody String request)
     {
-        TCiTask task = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCiTask>(){}.getType());
+        TCfgTask task = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgTask>(){}.getType());
         taskService.saveTask(task);
         return new Result().setMessage("保存成功");
     }
@@ -85,7 +85,7 @@ public class TaskController {
     @ResponseBody
     public Result savePipeline(@RequestBody String request)
     {
-        TCiPipeline pipeline = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCiPipeline>(){}.getType());
+        TCfgPipeline pipeline = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgPipeline>(){}.getType());
         pipeline.setStatus(true);
         taskService.savePipeline(pipeline);
         return new Result().setMessage("保存成功");

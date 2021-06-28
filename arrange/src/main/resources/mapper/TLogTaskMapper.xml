@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cyj.arrange.mapper.TCiTaskLogMapper">
+<mapper namespace="com.cyj.arrange.mapper.TLogTaskMapper">
 
-    <resultMap id="BaseResultMap" type="com.cyj.arrange.entry.TCiTaskLog">
-            <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
-            <result property="pipelineLogId" column="pipeline_log_id" jdbcType="INTEGER"/>
+    <resultMap id="BaseResultMap" type="com.cyj.arrange.entry.TLogTask">
+            <id property="seqId" column="seq_id" jdbcType="BIGINT"/>
+            <result property="pipelineLogId" column="pipeline_log_id" jdbcType="BIGINT"/>
             <result property="taskId" column="task_id" jdbcType="INTEGER"/>
             <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
             <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
@@ -17,4 +17,8 @@
         seq_id,pipeline_log_id,task_id,
         start_time,end_time,finish_detail
     </sql>
+    <delete id="deleteTaskHalfYear">
+        delete lt from t_log_pipeline lp left join t_log_task lt on
+            lp.seq_id = lt.pipeline_log_id and lp.start_time &lt; #{startTime}
+    </delete>
 </mapper>

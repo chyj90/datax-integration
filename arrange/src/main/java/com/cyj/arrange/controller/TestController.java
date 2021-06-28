@@ -31,18 +31,4 @@ public class TestController {
         return "OK";
     }
 
-    @RequestMapping("/addTask")
-    public String addTask(String id,String cron)
-    {
-        Integer iid = Integer.parseInt(id);
-        cronTaskRegistrar.addDataxTask(iid,"{'a':1}",cron);
-        return "OK";
-    }
-
-    @RequestMapping("/removeTask")
-    public String removeTask(String id)
-    {
-        cronTaskRegistrar.removeCronTask(Integer.parseInt(id));
-        return "OK";
-    }
 }

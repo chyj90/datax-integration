@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.arrange.mapper.TCfgTaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.cyj.arrange.entry.TCfgTask">
+            <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="json" column="json" jdbcType="VARCHAR"/>
+            <result property="owner" column="owner" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        seq_id,name,json,
+        owner
+    </sql>
+
+    <select id="findTaskByPipelineID" resultType="com.cyj.arrange.entry.TCfgTask">
+        select tr.* from t_cfg_pipeline_task tl left join t_cfg_task tr on tl.task_id = tr.seq_id where tl.pipeline_id = #{pipelineID} order by tl.order_no asc
+    </select>
+</mapper>

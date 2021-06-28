@@ -11,22 +11,22 @@ import lombok.experimental.Accessors;
 
 /**
  * 任务日志表
- * @TableName t_ci_task_log
+ * @TableName t_log_task
  */
-@TableName(value ="t_ci_task_log")
-@Accessors(chain = true)
+@TableName(value ="t_log_task")
 @Data
-public class TCiTaskLog implements Serializable {
+@Accessors(chain = true)
+public class TLogTask implements Serializable {
     /**
      * 主键
      */
     @TableId(type = IdType.AUTO)
-    private Integer seqId;
+    private Long seqId;
 
     /**
      * 流水线日志表id
      */
-    private Integer pipelineLogId;
+    private Long pipelineLogId;
 
     /**
      * 任务配置表ID

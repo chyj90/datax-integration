@@ -4,6 +4,7 @@ import com.alipay.sofa.jraft.entity.PeerId;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.cyj.arrange.config.cron.CronTaskRegistrar;
 import com.cyj.arrange.election.ElectionNode;
 import com.cyj.arrange.election.ElectionNodeOptions;
 import com.cyj.arrange.election.LeaderStateListener;
@@ -20,6 +21,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.net.UnknownHostException;
 
@@ -30,6 +32,7 @@ import java.net.UnknownHostException;
 @EnableFeignClients
 @Slf4j
 @MapperScan("com.cyj.arrange.mapper")
+@EnableScheduling
 public class Application {
     @Value("${election.dataPath}")
     private String dataPath;
@@ -69,11 +72,15 @@ public class Application {
             @Override
             public void onLeaderStart(long leaderTerm) {
                log.info("[ElectionBootstrap] Leader start");
+                CronTaskRegistrar registrar = context.getBean(CronTaskRegistrar.class);
+                registrar.initScheduleTask();
             }
 
             @Override
             public void onLeaderStop(long leaderTerm) {
                 log.info("[ElectionBootstrap] Leader stop on term: " + leaderTerm);
+                CronTaskRegistrar registrar = context.getBean(CronTaskRegistrar.class);
+                registrar.disposeScheduleTask();
             }
         });
         node.init(electionOpts);

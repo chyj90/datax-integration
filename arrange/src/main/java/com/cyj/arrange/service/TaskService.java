@@ -3,12 +3,12 @@ package com.cyj.arrange.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cyj.arrange.entry.TCiPipeline;
-import com.cyj.arrange.entry.TCiPipelineTask;
-import com.cyj.arrange.entry.TCiTask;
-import com.cyj.arrange.mapper.TCiPipelineMapper;
-import com.cyj.arrange.mapper.TCiPipelineTaskMapper;
-import com.cyj.arrange.mapper.TCiTaskMapper;
+import com.cyj.arrange.entry.TCfgPipeline;
+import com.cyj.arrange.entry.TCfgPipelineTask;
+import com.cyj.arrange.entry.TCfgTask;
+import com.cyj.arrange.mapper.TCfgPipelineMapper;
+import com.cyj.arrange.mapper.TCfgPipelineTaskMapper;
+import com.cyj.arrange.mapper.TCfgTaskMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,30 +20,30 @@ import java.util.List;
 @Service
 public class TaskService {
     @Autowired
-    TCiTaskMapper tCiTaskMapper;
+    TCfgTaskMapper tCfgTaskMapper;
 
     @Autowired
-    TCiPipelineMapper tCiPipelineMapper;
+    TCfgPipelineMapper tCfgPipelineMapper;
 
     @Autowired
-    TCiPipelineTaskMapper tCiPipelineTaskMapper;
+    TCfgPipelineTaskMapper tCfgPipelineTaskMapper;
 
-    public void saveTask(TCiTask task) {
+    public void saveTask(TCfgTask task) {
         if (task.getSeqId() != null) {
-            tCiTaskMapper.updateById(task);
+            tCfgTaskMapper.updateById(task);
         } else {
-            tCiTaskMapper.insert(task);
+            tCfgTaskMapper.insert(task);
         }
     }
 
-    public void savePipeline(TCiPipeline tCiPipeline)
+    public void savePipeline(TCfgPipeline tCiPipeline)
     {
         if (tCiPipeline.getSeqId()==null)
         {
-            tCiPipelineMapper.insert(tCiPipeline);
+            tCfgPipelineMapper.insert(tCiPipeline);
         }else
         {
-            tCiPipelineMapper.updateById(tCiPipeline);
+            tCfgPipelineMapper.updateById(tCiPipeline);
         }
     }
 
@@ -51,7 +51,7 @@ public class TaskService {
     {
         if (taskID!=null)
         {
-            tCiTaskMapper.deleteById(taskID);
+            tCfgTaskMapper.deleteById(taskID);
         }
     }
 
@@ -59,7 +59,7 @@ public class TaskService {
     {
         if (pipelineID!=null)
         {
-            tCiPipelineMapper.deleteById(pipelineID);
+            tCfgPipelineMapper.deleteById(pipelineID);
         }
     }
 
@@ -73,49 +73,49 @@ public class TaskService {
     {
         if (pipelineID!=null)
         {
-            tCiPipelineMapper.updateStatusBySeqId(status,pipelineID);
+            tCfgPipelineMapper.updateStatusBySeqId(status,pipelineID);
         }
     }
 
     @Transactional
     public void setPipelineTask(Integer pipelineID, List<Tuple2<Integer,Integer>> tasks)
     {
-        tCiPipelineTaskMapper.delete(new QueryWrapper<TCiPipelineTask>().eq("pipeline_id",pipelineID));
+        tCfgPipelineTaskMapper.delete(new QueryWrapper<TCfgPipelineTask>().eq("pipeline_id",pipelineID));
         for (Tuple2<Integer,Integer> tuple:tasks)
         {
-            TCiPipelineTask tCiPipelineTask = new TCiPipelineTask();
+            TCfgPipelineTask tCiPipelineTask = new TCfgPipelineTask();
             tCiPipelineTask.setPipelineId(pipelineID).setTaskId(tuple.getT1()).setOrderNo(tuple.getT2());
-            tCiPipelineTaskMapper.insert(tCiPipelineTask);
+            tCfgPipelineTaskMapper.insert(tCiPipelineTask);
         }
     }
 
-    public IPage<TCiTask> queryTaskPager(String taskName,Integer ownerID,int pageNo,int pageSize)
+    public IPage<TCfgTask> queryTaskPager(String taskName,Integer ownerID,int pageNo,int pageSize)
     {
-        QueryWrapper<TCiTask> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<TCfgTask> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotEmpty(taskName))
         {
             queryWrapper.like("name",taskName);
         }
         queryWrapper.eq("owner",ownerID);
-        Page<TCiTask> page = new Page<>(pageNo,pageSize);
-        return tCiTaskMapper.selectPage(page,queryWrapper);
+        Page<TCfgTask> page = new Page<>(pageNo,pageSize);
+        return tCfgTaskMapper.selectPage(page,queryWrapper);
     }
 
-    public IPage<TCiPipeline> queryPipelinePager(String pipelineName,Integer ownerID,int pageNo,int pageSize)
+    public IPage<TCfgPipeline> queryPipelinePager(String pipelineName,Integer ownerID,int pageNo,int pageSize)
     {
-        QueryWrapper<TCiPipeline> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<TCfgPipeline> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name",pipelineName).eq("owner",ownerID);
-        Page<TCiPipeline> page = new Page<>(pageNo,pageSize);
-        return tCiPipelineMapper.selectPage(page,queryWrapper);
+        Page<TCfgPipeline> page = new Page<>(pageNo,pageSize);
+        return tCfgPipelineMapper.selectPage(page,queryWrapper);
     }
 
-    public List<TCiPipelineTask> queryPipelineTask(Integer pipelineID)
+    public List<TCfgPipelineTask> queryPipelineTask(Integer pipelineID)
     {
-        return tCiPipelineTaskMapper.selectList(new QueryWrapper<TCiPipelineTask>().eq("pipeline_id",pipelineID));
+        return tCfgPipelineTaskMapper.selectList(new QueryWrapper<TCfgPipelineTask>().eq("pipeline_id",pipelineID));
     }
 
-    public List<TCiTask> queryAllTask(Integer userID)
+    public List<TCfgTask> queryAllTask(Integer userID)
     {
-        return tCiTaskMapper.selectList(new QueryWrapper<TCiTask>().eq("owner",userID));
+        return tCfgTaskMapper.selectList(new QueryWrapper<TCfgTask>().eq("owner",userID));
     }
 }
