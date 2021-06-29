@@ -73,7 +73,7 @@ public class Task {
         if (target != null) {
             TCfgTask cfgTask = cfgTaskMapper.selectById(target.getTaskId());
             // TODO: 2021/6/28 任务失败了怎么办
-            monitorProcessor.process(cfgTask.getJson());
+            monitorProcessor.process(cfgTask.getJsonStr());
             //处理完毕设置endtime
             target.setEndTime(new Date());
             logTaskMapper.updateById(target);
