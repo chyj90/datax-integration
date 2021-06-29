@@ -35,6 +35,16 @@ public class TCfgTask implements Serializable {
      */
     private Integer owner;
 
+    /**
+     * cron表达式
+     */
+    private String cron;
+
+    /**
+     * 开始状态 0：关闭 1：开启
+     */
+    private Boolean status;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

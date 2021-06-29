@@ -5,14 +5,16 @@
 <mapper namespace="com.cyj.datax.mapper.TCfgTaskMapper">
 
     <resultMap id="BaseResultMap" type="com.cyj.datax.entry.TCfgTask">
-            <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="jsonStr" column="json_str" jdbcType="VARCHAR"/>
-            <result property="owner" column="owner" jdbcType="INTEGER"/>
+        <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="jsonStr" column="json_str" jdbcType="VARCHAR"/>
+        <result property="owner" column="owner" jdbcType="INTEGER"/>
+        <result property="cron" column="cron" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="BOOLEAN"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         seq_id,name,json_str,
-        owner
+        owner,cron,status
     </sql>
 </mapper>

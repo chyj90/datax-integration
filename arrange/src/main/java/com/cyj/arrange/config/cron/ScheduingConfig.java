@@ -12,7 +12,7 @@ public class ScheduingConfig {
     {
         ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
         // 定时任务执行线程池核心线程数
-        taskScheduler.setPoolSize(6);
+        taskScheduler.setPoolSize(10);
         taskScheduler.setRemoveOnCancelPolicy(true);
         taskScheduler.setThreadNamePrefix("TaskSchedulerThreadPool-");
         return taskScheduler;

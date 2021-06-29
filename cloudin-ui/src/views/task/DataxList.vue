@@ -49,6 +49,9 @@
         <a-form-model-item label="任务描述">
           <a-input v-model="form.name" placeholder="任务描述" />
         </a-form-model-item>
+        <a-form-model-item label="Cron">
+          <a-input v-model="form.cron" placeholder="Cron表达式" />
+        </a-form-model-item>
         <a-form-model-item label="Json">
           <a-row>
             <a-col :span="24">
@@ -100,7 +103,12 @@ export default {
         {
           title: '任务描述',
           dataIndex: 'name',
-          width: '18%'
+          width: '15%'
+        },
+        {
+          title: 'Cron',
+          dataIndex: 'cron',
+          width: '15%'
         },
         {
           title: 'Json',
@@ -145,7 +153,8 @@ export default {
       this.form = {
         seqId: '',
         name: '',
-        jsonStr: ''
+        jsonStr: '',
+        cron: ''
       }
     },
     handleEdit (record) {
@@ -157,7 +166,8 @@ export default {
       const parameter = {
         seqId: this.form.seqId,
         name: this.form.name,
-        jsonStr: this.form.jsonStr
+        jsonStr: this.form.jsonStr,
+        cron: this.form.cron
       }
       parameter.jsonStr = JSON.stringify(parameter.jsonStr)
       saveTask(parameter).then((res) => {

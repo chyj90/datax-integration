@@ -1,15 +1,20 @@
 package com.cyj.arrange.service;
 
+import com.cyj.arrange.Application;
 import com.cyj.arrange.bean.vo.TCfgPipelineTaskVO;
+import com.cyj.arrange.config.cron.CronTaskRegistrar;
+import com.cyj.arrange.entry.TCfgPipeline;
 import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.entry.TLogPipeline;
 import com.cyj.arrange.entry.TLogTask;
+import com.cyj.arrange.mapper.TCfgPipelineMapper;
 import com.cyj.arrange.mapper.TCfgTaskMapper;
 import com.cyj.arrange.mapper.TLogPipelineMapper;
 import com.cyj.arrange.mapper.TLogTaskMapper;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,35 +23,55 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@EnableScheduling
 public class ScheduleService {
 
     @Autowired
     TCfgTaskMapper tCfgTaskMapper;
 
     @Autowired
+    TCfgPipelineMapper cfgPipelineMapper;
+
+    @Autowired
     TLogPipelineMapper tLogPipelineMapper;
 
     @Autowired
     TLogTaskMapper tLogTaskMapper;
+
+    @Autowired
+    CronTaskRegistrar cronTaskRegistrar;
     /**
      *  启动流水线
      */
     @Transactional
     public void startPipeline(Integer pipelineID)
     {
-        List<TCfgPipelineTaskVO> tasks = tCfgTaskMapper.findTaskByPipelineID(pipelineID);
-        if (tasks!=null&&tasks.size()>0)
+        TCfgPipeline pipeline = cfgPipelineMapper.selectById(pipelineID);
+        if (pipeline.getStatus())
         {
-            Date startTime = new Date();
-            TLogPipeline pipelineLog = new TLogPipeline();
-            pipelineLog.setPipelineId(pipelineID).setStartTime(startTime).setStatus(false);
-            tLogPipelineMapper.insert(pipelineLog);
-            for (TCfgTask task:tasks)
+            List<TCfgPipelineTaskVO> tasks = tCfgTaskMapper.findTaskByPipelineID(pipelineID);
+            if (tasks!=null&&tasks.size()>0)
             {
-                TLogTask taskLog = new TLogTask();
-                taskLog.setPipelineLogId(pipelineLog.getSeqId()).setTaskId(task.getSeqId());
-                tLogTaskMapper.insert(taskLog);
+                Date startTime = new Date();
+                TLogPipeline pipelineLog = new TLogPipeline();
+                pipelineLog.setPipelineId(pipelineID).setStartTime(startTime).setStatus(false);
+                tLogPipelineMapper.insert(pipelineLog);
+                for (TCfgTask task:tasks)
+                {
+                    TLogTask taskLog = new TLogTask();
+                    taskLog.setPipelineLogId(pipelineLog.getSeqId()).setTaskId(task.getSeqId());
+                    tLogTaskMapper.insert(taskLog);
+                }
             }
+        }
+    }
+
+    public void startTask(Integer taskID)
+    {
+        TCfgTask task = tCfgTaskMapper.selectById(taskID);
+        if (task.getStatus())
+        {
+            // TODO: 2021/6/29 eureka恢复 feign调用datax服务 
         }
     }
 
@@ -61,5 +86,17 @@ public class ScheduleService {
         String param = DateFormatUtils.format(startTime,"yyyy-MM-dd HH:mm:ss");
         tLogTaskMapper.deleteTaskHalfYear(param);
         tLogPipelineMapper.deletePipelineHalfYear(param);
+    }
+
+    /**
+     * 5分钟更新一次定时任务配置
+     */
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void scanScheduleTask()
+    {
+        if (Application.isLearder())
+        {
+            cronTaskRegistrar.initScheduleTask();
+        }
     }
 }

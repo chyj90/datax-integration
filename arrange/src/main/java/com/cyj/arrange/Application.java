@@ -40,10 +40,11 @@ public class Application {
     @Value("${election.initialConfStr}")
     private String initialConfStr;
     private static Logger logger = LoggerFactory.getLogger(Application.class);
-
     private static ApplicationContext context;
-    public static void main(String[] args){
-        context = SpringApplication.run(Application.class,args);
+    private static ElectionNode electionNode;
+
+    public static void main(String[] args) {
+        context = SpringApplication.run(Application.class, args);
         Application application = context.getBean(Application.class);
         application.initElectNode();
     }
@@ -55,8 +56,12 @@ public class Application {
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
     }
-    private void initElectNode()
+
+    public static boolean isLearder()
     {
+        return electionNode.isLeader();
+    }
+    private void initElectNode() {
         final ElectionNodeOptions electionOpts = new ElectionNodeOptions();
         electionOpts.setDataPath(dataPath);
         electionOpts.setGroupId(groupId);
@@ -68,9 +73,9 @@ public class Application {
 
             @Override
             public void onLeaderStart(long leaderTerm) {
-               log.info("[ElectionBootstrap] Leader start");
+                log.info("[ElectionBootstrap] Leader start");
                 CronTaskRegistrar registrar = context.getBean(CronTaskRegistrar.class);
-                //registrar.initScheduleTask();
+                registrar.initScheduleTask();
             }
 
             @Override
@@ -81,6 +86,7 @@ public class Application {
             }
         });
         node.init(electionOpts);
+        Application.electionNode = node;
     }
 
     public static ApplicationContext getContext() {
