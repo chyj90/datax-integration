@@ -1,5 +1,6 @@
 package com.cyj.arrange.service;
 
+import com.cyj.arrange.bean.vo.TCfgPipelineTaskVO;
 import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.entry.TLogPipeline;
 import com.cyj.arrange.entry.TLogTask;
@@ -33,7 +34,7 @@ public class ScheduleService {
     @Transactional
     public void startPipeline(Integer pipelineID)
     {
-        List<TCfgTask> tasks = tCfgTaskMapper.findTaskByPipelineID(pipelineID);
+        List<TCfgPipelineTaskVO> tasks = tCfgTaskMapper.findTaskByPipelineID(pipelineID);
         if (tasks!=null&&tasks.size()>0)
         {
             Date startTime = new Date();

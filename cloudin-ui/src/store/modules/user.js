@@ -1,5 +1,5 @@
 import storage from 'store'
-import { login, logout } from '@/api/login'
+import { login, getLoginUser } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/const-value'
 
 const user = {
@@ -15,9 +15,8 @@ const user = {
     SET_TOKEN: (state, token) => {
       state.token = token
     },
-    SET_NAME: (state, { name, welcome }) => {
+    SET_NAME: (state, { name }) => {
       state.name = name
-      state.welcome = welcome
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -38,7 +37,7 @@ const user = {
           const result = response
           storage.set(ACCESS_TOKEN, result[ACCESS_TOKEN], 7 * 24 * 60 * 60 * 1000)
           commit('SET_TOKEN', result[ACCESS_TOKEN])
-          resolve(result.user)
+          resolve(response)
         }).catch(error => {
           reject(error)
         })
@@ -46,15 +45,19 @@ const user = {
     },
     // 登出
     Logout ({ commit, state }) {
-      return new Promise((resolve) => {
-        logout(state.token).then(() => {
-          resolve()
-        }).catch(() => {
-          resolve()
-        }).finally(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          storage.remove(ACCESS_TOKEN)
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      storage.remove(ACCESS_TOKEN)
+    },
+    // 获取用户信息
+    GetInfo ({ commit }) {
+      return new Promise((resolve, reject) => {
+        getLoginUser().then(response => {
+          const username = response
+          commit('SET_NAME', { name: username })
+          resolve(response)
+        }).catch(error => {
+          reject(error)
         })
       })
     }

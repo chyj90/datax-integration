@@ -35,6 +35,7 @@ public class TCfgPipelineTask implements Serializable {
     /**
      * 执行顺序
      */
+    @Deprecated
     private Integer orderNo;
 
     @TableField(exist = false)

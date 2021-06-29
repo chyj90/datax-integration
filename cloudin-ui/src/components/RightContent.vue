@@ -6,7 +6,7 @@
 
 <script>
 import AvatarDropdown from './AvatarDropdown'
-
+import store from '@/store'
 export default {
   name: 'RightContent',
   components: {
@@ -43,7 +43,7 @@ export default {
   mounted () {
     setTimeout(() => {
       this.currentUser = {
-        name: 'Serati Ma'
+        name: store.getters.name
       }
     }, 1500)
   }

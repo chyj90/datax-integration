@@ -1,5 +1,6 @@
 package com.cyj.arrange.mapper;
 
+import com.cyj.arrange.bean.vo.TCfgPipelineTaskVO;
 import com.cyj.arrange.entry.TCfgTask;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,7 +13,7 @@ import java.util.List;
  */
 @Component
 public interface TCfgTaskMapper extends BaseMapper<TCfgTask> {
-    List<TCfgTask> findTaskByPipelineID(@Param("pipelineID") Integer pipelineID);
+    List<TCfgPipelineTaskVO> findTaskByPipelineID(@Param("pipelineID") Integer pipelineID);
 }
 
 

@@ -7,7 +7,7 @@
     <resultMap id="BaseResultMap" type="com.cyj.arrange.entry.TCfgTask">
             <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="json" column="json_str" jdbcType="VARCHAR"/>
+            <result property="jsonStr" column="json_str" jdbcType="VARCHAR"/>
             <result property="owner" column="owner" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -16,7 +16,7 @@
         owner
     </sql>
 
-    <select id="findTaskByPipelineID" resultType="com.cyj.arrange.entry.TCfgTask">
-        select tr.* from t_cfg_pipeline_task tl left join t_cfg_task tr on tl.task_id = tr.seq_id where tl.pipeline_id = #{pipelineID} order by tl.order_no asc
+    <select id="findTaskByPipelineID" resultType="com.cyj.arrange.bean.vo.TCfgPipelineTaskVO">
+        select tl.seq_id as ptid,tr.* from t_cfg_pipeline_task tl left join t_cfg_task tr on tl.task_id = tr.seq_id where tl.pipeline_id = #{pipelineID} order by tl.seq_id asc
     </select>
 </mapper>

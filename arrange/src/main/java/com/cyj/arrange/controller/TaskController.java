@@ -1,7 +1,9 @@
 package com.cyj.arrange.controller;
 
 import com.cyj.arrange.bean.Result;
+import com.cyj.arrange.bean.vo.TCfgPipelineVO;
 import com.cyj.arrange.entry.TCfgPipeline;
+import com.cyj.arrange.entry.TCfgPipelineTask;
 import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.service.SysService;
 import com.cyj.arrange.service.TaskService;
@@ -58,7 +60,6 @@ public class TaskController {
         }
     }
     @RequestMapping("/all")
-    @ResponseBody
     public Result allTask()
     {
         String username = SecurityUtil.userName();
@@ -92,7 +93,8 @@ public class TaskController {
         Integer userID = sysService.userID(username);
         TCfgPipeline pipeline = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgPipeline>(){}.getType());
         pipeline.setOwner(userID);
-        pipeline.setStatus(true);
+        //默认流水线不开启 配置确认无误后手动开启
+        pipeline.setStatus(false);
         taskService.savePipeline(pipeline);
         return new Result().setMessage("保存成功");
     }
@@ -101,20 +103,51 @@ public class TaskController {
      *给流水线配置任务
      */
     @RequestMapping("/savePipeTask")
-    @ResponseBody
     public Result savePipelineTask(@RequestBody String request)
     {
-        Map<String,Object> objectMap = JwtTokenUtil.gson().fromJson(request,new TypeToken<Map<String,Object>>(){}.getType());
-        Double pipelineID = (Double) objectMap.get("pipelineID");
-        List<Map<String,Double>> tasks = (List<Map<String, Double>>) objectMap.get("tasks");
-        Integer i_pipe_id = pipelineID.intValue();
-        List<Tuple2<Integer,Integer>> t_tasks = new ArrayList<>();
-        for (Map<String,Double> task:tasks)
-        {
-            Tuple2<Integer,Integer> tuple = Tuples.of(task.get("id").intValue(),task.get("order").intValue());
-            t_tasks.add(tuple);
-        }
-        taskService.setPipelineTask(i_pipe_id,t_tasks);
+        TCfgPipelineTask pipelineTask = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgPipelineTask>(){}.getType());
+        taskService.addPipelineTask(pipelineTask);
         return new Result().setMessage("保存成功");
+    }
+
+    @RequestMapping("/del/pipelineTask")
+    public Result deletePipelineTask(@RequestParam("seqId") Integer pipelineTaskID)
+    {
+        taskService.delPipelineTask(pipelineTaskID);
+        return new Result().setMessage("保存成功");
+    }
+
+    @RequestMapping("/del/task")
+    public Result deleteTask(@RequestParam(value = "seqId") Integer taskID)
+    {
+        boolean rs = taskService.delTask(taskID);
+        if (rs)
+        {
+            return new Result().setMessage("删除成功");
+        }else
+        {
+            return new Result().setCode(HttpStatus.INTERNAL_SERVER_ERROR.value()).setMessage("有关联流水线任务不能删除");
+        }
+    }
+
+    @RequestMapping("/del/pipeline")
+    public Result deletePipeline(@RequestParam(value = "seqId") Integer taskID)
+    {
+        taskService.delPipeline(taskID);
+        return new Result().setMessage("删除成功");
+    }
+
+    @RequestMapping("/switch/pipeline/status")
+    public Result switchPipelineStatus(@RequestParam("seqId") Integer pipelineID,@RequestParam("status") Boolean status)
+    {
+        taskService.setPipelineStatus(pipelineID,status);
+        return new Result().setMessage("保存成功");
+    }
+
+    @RequestMapping("/pipeline/detail")
+    public Result pipelineDatail(@RequestParam("seqId") Integer pipelineID)
+    {
+        TCfgPipelineVO vo = taskService.queryPipeline(pipelineID);
+        return new Result().setMessage(vo);
     }
 }

@@ -13,12 +13,19 @@
         <template>
           <a-popconfirm
             title="删除此任务？"
-            @confirm="() => onDelete(record.key)"
+            cancelText="取消"
+            okText="确定"
+            @confirm="() => onDelete(record.seqId)"
           >
             <a-button type="danger" size="small">删除</a-button>
           </a-popconfirm>
           <a-divider type="vertical" />
-          <a-button @click="handleEdit(record)" type="primary" size="small">编辑</a-button>
+          <a-button
+            @click="handleEdit(record)"
+            type="primary"
+            size="small"
+          >编辑</a-button
+          >
         </template>
       </span>
     </s-table>
@@ -59,7 +66,7 @@
 </template>
 <script>
 import { STable } from '@/components'
-import { getDataxTaskList, saveTask } from '@/api/task'
+import { getDataxTaskList, saveTask, delTask } from '@/api/task'
 import vueJsonEditor from 'vue-json-editor'
 export default {
   components: {
@@ -110,8 +117,7 @@ export default {
     }
   },
   computed: {},
-  watch: {
-  },
+  watch: {},
   methods: {
     handleOk (e) {
       this.confirmLoading = true
@@ -124,7 +130,16 @@ export default {
     handleCancel (e) {
       this.visible = false
     },
-    onDelete (key) {},
+    onDelete (key) {
+      delTask({ seqId: key })
+        .then((res) => {
+          this.$message.info(res)
+          this.$refs.table.refresh()
+        })
+        .catch((error) => {
+          this.$message.error(error)
+        })
+    },
     handleAdd () {
       this.visible = true
       this.form = {
@@ -146,9 +161,9 @@ export default {
       }
       parameter.jsonStr = JSON.stringify(parameter.jsonStr)
       saveTask(parameter).then((res) => {
-          this.$message.info('保存成功')
-          callback()
-        })
+        this.$message.info('保存成功')
+        callback()
+      })
     }
   }
 }
@@ -157,13 +172,13 @@ export default {
 .editable-add-btn {
   margin-bottom: 8px;
 }
-.ant-form-item{
+.ant-form-item {
   margin-bottom: 0px;
 }
-.ant-modal-body{
+.ant-modal-body {
   padding-top: 2px;
 }
-.jsoneditor-poweredBy{
+.jsoneditor-poweredBy {
   display: none;
 }
 </style>

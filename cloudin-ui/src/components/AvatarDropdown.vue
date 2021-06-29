@@ -37,8 +37,10 @@ export default {
   methods: {
     handleLogout (e) {
       Modal.confirm({
-        title: this.$t('layouts.usermenu.dialog.title'),
-        content: this.$t('layouts.usermenu.dialog.content'),
+        title: '登出',
+        content: '是否确定退出登陆?',
+        okText: '确定',
+        cancelText: ' 取消',
         onOk: () => {
           // return new Promise((resolve, reject) => {
           //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1500)

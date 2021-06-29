@@ -7,10 +7,23 @@ import '@/components/NProgress/nprogress.less' // progress bar custom style
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const loginRoutePath = '/user/login'
-const whiteList = ['login']
+const whiteList = ['login', 'logout']
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  console.log(storage.get(ACCESS_TOKEN))
+  if (!whiteList.includes(to.name) && !store.getters.name) {
+    store.dispatch('GetInfo').then(res => {
+      processRoute(to, from, next)
+    })
+  } else {
+    processRoute(to, from, next)
+  }
+})
+
+router.afterEach(() => {
+  NProgress.done() // finish progress bar
+})
+
+function processRoute (to, from, next) {
   if (storage.get(ACCESS_TOKEN)) {
     if (store.getters.addRouters && store.getters.addRouters.length === 0) {
       store.dispatch('GenerateRoutes', { roles: {} }).then(() => {
@@ -39,8 +52,4 @@ router.beforeEach((to, from, next) => {
       NProgress.done()
     }
   }
-})
-
-router.afterEach(() => {
-  NProgress.done() // finish progress bar
-})
+}

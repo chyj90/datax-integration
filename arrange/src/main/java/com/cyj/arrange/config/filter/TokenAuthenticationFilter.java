@@ -40,13 +40,13 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
             try {
                 authentication = getAuthentication(request);
             } catch (Exception e) {
-                ResponseUtil.writeResult(response, HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
+                ResponseUtil.writeResult(response, HttpStatus.UNAUTHORIZED,e.getMessage());
                 return;
             }
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                ResponseUtil.writeResult(response,HttpStatus.FORBIDDEN,"鉴权失败");
+                ResponseUtil.writeResult(response,HttpStatus.UNAUTHORIZED,"鉴权失败");
                 return;
             }
             chain.doFilter(request, response);

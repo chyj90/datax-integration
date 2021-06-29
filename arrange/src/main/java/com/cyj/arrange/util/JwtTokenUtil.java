@@ -1,14 +1,16 @@
 package com.cyj.arrange.util;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -18,9 +20,35 @@ public class JwtTokenUtil {
     private static long tokenExpiration = 24 * 60 * 60 * 1000;
     private static String tokenSignKey = "123456";
     private static String userRoleKey = "userRole";
-    private static Gson gson = new Gson();
+    private static Gson gson;
     public static final String TOKEN_KEY="Access-Token";
 
+    static {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Integer.class, new TypeAdapter<Number>() {
+                    @Override
+                    public void write(JsonWriter out, Number value) throws IOException {
+                        out.value(value);
+                    }
+
+                    @Override
+                    public Number read(JsonReader in) throws IOException {
+                        if (in.peek() == JsonToken.NULL) {
+                            in.nextNull();
+                            return null;
+                        }
+                        try {
+                            String result = in.nextString();
+                            if ("".equals(result)) {
+                                return null;
+                            }
+                            return Integer.parseInt(result);
+                        } catch (NumberFormatException e) {
+                            throw new JsonSyntaxException(e);
+                        }
+                    }
+                }).create();
+    }
     public static Gson gson()
     {
         return gson;

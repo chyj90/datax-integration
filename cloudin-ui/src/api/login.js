@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const userApi = {
   Login: '/login',
-  Logout: '/logout'
+  login_user_info: '/user/info'
 }
 
 /**
@@ -23,13 +23,9 @@ export function login (parameter) {
     data: parameter
   })
 }
-
-export function logout () {
+export function getLoginUser () {
   return request({
-    url: userApi.Logout,
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    url: userApi.login_user_info,
+    method: 'get'
   })
 }

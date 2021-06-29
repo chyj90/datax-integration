@@ -34,15 +34,10 @@ request.interceptors.request.use(config => {
 
 // response interceptor
 request.interceptors.response.use((response) => {
-  if (response.code === 403) {
+  if (response.data.code === 403 || response.data.code === 401) {
     notification.error({
-      message: '权限不足',
-      description: 'Forbidden'
-    })
-  } else if (response.code === 401) {
-    notification.error({
-      message: '登陆过期',
-      description: 'Unauthorized'
+      message: '请求失败',
+      description: '请重新登陆'
     })
     store.dispatch('Logout').then(() => {
       setTimeout(() => {
@@ -50,7 +45,11 @@ request.interceptors.response.use((response) => {
       }, 1500)
     })
   } else {
-    return response.data.message
+    if (response.data.code !== 200) {
+      return Promise.reject(response.data.message)
+    } else {
+      return response.data.message
+    }
   }
 }, errorHandler)
 
