@@ -13,12 +13,6 @@ import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/task")
@@ -33,7 +27,6 @@ public class TaskController {
     SysService sysService;
 
     @RequestMapping("/datax/list")
-    @ResponseBody
     public Result taskListPagion(@RequestParam(value = "name",required = false) String taskName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
         String username = SecurityUtil.userName();
         Integer userID = sysService.userID(username);
@@ -47,7 +40,6 @@ public class TaskController {
     }
 
     @RequestMapping("/pipeline/list")
-    @ResponseBody
     public Result pipelineListPagion(@RequestParam(value = "name",required = false) String pipelineName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
         String username = SecurityUtil.userName();
         Integer userID = sysService.userID(username);
@@ -74,7 +66,6 @@ public class TaskController {
     }
 
     @RequestMapping("/saveTask")
-    @ResponseBody
     public Result saveTask(@RequestBody String request)
     {
         String username = SecurityUtil.userName();
@@ -86,7 +77,6 @@ public class TaskController {
     }
 
     @RequestMapping("/savePipeline")
-    @ResponseBody
     public Result savePipeline(@RequestBody String request)
     {
         String username = SecurityUtil.userName();
