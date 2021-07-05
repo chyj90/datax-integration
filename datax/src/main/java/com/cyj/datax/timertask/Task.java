@@ -38,7 +38,7 @@ public class Task {
     MonitorProcessor monitorProcessor;
 
     @Scheduled(cron = "*/5 * * * * ?")
-    @Async("taskExecutor")
+    @Async("pipelineExecutor")
     public void pickTask() {
         DistributedLock lock = client.getlock(Client.TASK_LOCK);
         TLogTask target = null;

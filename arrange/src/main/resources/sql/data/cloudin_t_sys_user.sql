@@ -1,0 +1,1 @@
+INSERT INTO cloudin.t_sys_user (seq_id, username, password, nickname) VALUES (1, 'admin', '$2a$10$ghoiT8ljO9y7BeXey.CSI.w1jIEskm/CMU6drXgjer4zUKCiSVET.', 'admin');

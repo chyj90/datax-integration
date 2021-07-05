@@ -36,16 +36,38 @@ public class Application implements ApplicationListener<ContextRefreshedEvent> {
         Environment env = SpringApplication.run(Application.class,args).getEnvironment();
     }
 
-    @Bean("taskExecutor")
-    public ThreadPoolTaskExecutor getAsyncExecutor(){
+    /**
+     * 流水线执行线程池
+     * @return
+     */
+    @Bean("pipelineExecutor")
+    public ThreadPoolTaskExecutor pipelineExecutor(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(10);
         executor.setKeepAliveSeconds(60);
-        executor.setThreadNamePrefix("Timer-Task-");
+        executor.setThreadNamePrefix("Pipe-Pool-");
         // 线程池对拒绝任务的处理策略 直接丢弃不执行
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+        executor.initialize();
+        return executor;
+    }
+
+    /**
+     * 普通任务执行线程池
+     * @param
+     */
+    @Bean("taskExecutor")
+    public ThreadPoolTaskExecutor taskExecutor(){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(10);
+        executor.setKeepAliveSeconds(60);
+        executor.setThreadNamePrefix("Task-Pool-");
+        // 线程池对拒绝任务的处理策略 直接丢弃不执行
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         executor.initialize();
         return executor;
     }
