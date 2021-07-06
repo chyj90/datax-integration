@@ -2,8 +2,10 @@ package com.cyj.datax.timertask;
 
 import com.alipay.sofa.jraft.rhea.util.concurrent.DistributedLock;
 import com.cyj.datax.entry.TCfgTask;
+import com.cyj.datax.entry.TLogDatax;
 import com.cyj.datax.entry.TLogTask;
 import com.cyj.datax.mapper.TCfgTaskMapper;
+import com.cyj.datax.mapper.TLogDataxMapper;
 import com.cyj.datax.mapper.TLogPipelineMapper;
 import com.cyj.datax.mapper.TLogTaskMapper;
 import com.cyj.datax.processor.MonitorProcessor;
@@ -36,6 +38,9 @@ public class Task {
 
     @Autowired
     MonitorProcessor monitorProcessor;
+
+    @Autowired
+    TLogDataxMapper logDataxMapper;
 
     @Scheduled(cron = "*/5 * * * * ?")
     @Async("pipelineExecutor")
@@ -73,7 +78,9 @@ public class Task {
         if (target != null) {
             TCfgTask cfgTask = cfgTaskMapper.selectById(target.getTaskId());
             // TODO: 2021/6/28 任务失败了怎么办
-            monitorProcessor.process(cfgTask.getJsonStr());
+            TLogDatax logDatax = new TLogDatax().setTaskId(cfgTask.getSeqId()).setExecTime(target.getStartTime());
+            logDataxMapper.insert(logDatax);
+            monitorProcessor.process(cfgTask.getJsonStr(),logDatax.getSeqId());
             //处理完毕设置endtime
             target.setEndTime(new Date());
             logTaskMapper.updateById(target);

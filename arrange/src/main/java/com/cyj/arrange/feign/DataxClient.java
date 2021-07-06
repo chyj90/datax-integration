@@ -12,5 +12,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("server-datax")
 public interface DataxClient {
     @RequestMapping(method = RequestMethod.GET, value = "/task/stream")
-    String exec(@RequestParam("job") String job);
+    String exec(@RequestParam("taskID") Integer taskID,@RequestParam("job") String job);
 }

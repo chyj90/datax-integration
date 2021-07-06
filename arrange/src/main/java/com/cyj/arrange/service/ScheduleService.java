@@ -7,6 +7,7 @@ import com.cyj.arrange.entry.TCfgPipeline;
 import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.entry.TLogPipeline;
 import com.cyj.arrange.entry.TLogTask;
+import com.cyj.arrange.feign.DataxClient;
 import com.cyj.arrange.mapper.TCfgPipelineMapper;
 import com.cyj.arrange.mapper.TCfgTaskMapper;
 import com.cyj.arrange.mapper.TLogPipelineMapper;
@@ -40,6 +41,9 @@ public class ScheduleService {
 
     @Autowired
     CronTaskRegistrar cronTaskRegistrar;
+
+    @Autowired
+    DataxClient dataxClient;
     /**
      *  启动流水线
      */
@@ -71,7 +75,8 @@ public class ScheduleService {
         TCfgTask task = tCfgTaskMapper.selectById(taskID);
         if (task.getStatus())
         {
-            // TODO: 2021/6/29 eureka恢复 feign调用datax服务 
+            String json = task.getJsonStr();
+            dataxClient.exec(taskID,json);
         }
     }
 

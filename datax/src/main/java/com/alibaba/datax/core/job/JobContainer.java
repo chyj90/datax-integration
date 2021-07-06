@@ -28,13 +28,20 @@ import com.alibaba.datax.core.util.container.CoreConstant;
 import com.alibaba.datax.core.util.container.LoadUtil;
 import com.alibaba.datax.dataxservice.face.domain.enums.ExecuteMode;
 import com.alibaba.fastjson.JSON;
+import com.cyj.datax.Application;
+import com.cyj.datax.annotation.UserDef;
+import com.cyj.datax.entry.TLogDatax;
+import com.cyj.datax.mapper.TLogDataxMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,12 +99,15 @@ public class JobContainer extends AbstractContainer {
      * jobContainer主要负责的工作全部在start()里面，包括init、prepare、split、scheduler、
      * post以及destroy和statistics
      */
+    @UserDef
     @Override
     public void start() {
         LOG.info("DataX jobContainer starts job.");
 
         boolean hasException = false;
         boolean isDryRun = false;
+        TLogDataxMapper logDataxMapper = Application.applicationContext.getBean(TLogDataxMapper.class);
+        TLogDatax logDatax = logDataxMapper.selectById(this.jobId);
         try {
             this.startTimeStamp = System.currentTimeMillis();
             isDryRun = configuration.getBool(CoreConstant.DATAX_JOB_SETTING_DRYRUN, false);
@@ -125,6 +135,11 @@ public class JobContainer extends AbstractContainer {
                 LOG.info("DataX jobId [{}] completed successfully.", this.jobId);
 
                 this.invokeHooks();
+            }
+            if (logDatax!=null)
+            {
+                logDatax.setStatus(true).setEndTime(new Date());
+                logDataxMapper.updateById(logDatax);
             }
         } catch (Throwable e) {
             LOG.error("Exception when job run", e);
@@ -158,7 +173,16 @@ public class JobContainer extends AbstractContainer {
 
             Communication reportCommunication = CommunicationTool.getReportCommunication(communication, tempComm, this.totalStage);
             super.getContainerCommunicator().report(reportCommunication);
-
+            if (logDatax!=null)
+            {
+                ByteArrayOutputStream ots = new ByteArrayOutputStream();
+                try{
+                    e.printStackTrace(new PrintStream(ots));
+                } catch (Exception exception) {
+                }
+                logDatax.setStatus(false).setEndTime(new Date()).setNotes(ots.toString());
+                logDataxMapper.updateById(logDatax);
+            }
             throw DataXException.asDataXException(
                     FrameworkErrorCode.RUNTIME_ERROR, e);
         } finally {

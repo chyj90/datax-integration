@@ -19,11 +19,6 @@ public class TestController {
     CronTaskRegistrar cronTaskRegistrar;
     @Autowired
     DataxClient dataxClient;
-    @RequestMapping("/exec")
-    public String exec()
-    {
-        return dataxClient.exec("job/testjob.json");
-    }
 
     @RequestMapping("/str")
     public String str()

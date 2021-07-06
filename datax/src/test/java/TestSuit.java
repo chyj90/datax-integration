@@ -12,6 +12,5 @@ public class TestSuit {
 
     @Test
     public void start() throws Throwable {
-        new MonitorProcessor().process("job/testjob.json");
     }
 }

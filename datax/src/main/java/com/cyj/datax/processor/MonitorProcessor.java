@@ -13,14 +13,18 @@ import java.time.LocalTime;
 @Component
 public class MonitorProcessor {
 
-    public void process(String jsonPath) {
+    public void process(String jsonPath,Long jobid) {
         if (jsonPath.startsWith("/")) {
             jsonPath = jsonPath.substring(1);
         }
         if (!jsonPath.trim().startsWith("{")) {
             jsonPath = CoreConstant.DATAX_HOME + jsonPath;
         }
-        String[] datxArgs = {"-job", jsonPath, "-mode", "standalone"};
+        if (jobid==null||jobid<=0)
+        {
+            jobid = -1l;
+        }
+        String[] datxArgs = {"-job", jsonPath, "-mode", "standalone","-jobid",jobid+""};
         try {
             Engine.entry(datxArgs);
         } catch (Throwable e) {

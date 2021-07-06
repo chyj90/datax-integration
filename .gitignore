@@ -61,4 +61,5 @@ datax/target/*
 arrange/target/*
 cloudin-ui/node_modules
 arrange/src/main/java/generator
+datax/src/main/java/generator
 election.dataPath/
