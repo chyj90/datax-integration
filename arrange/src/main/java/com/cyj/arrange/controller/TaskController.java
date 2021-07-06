@@ -72,6 +72,10 @@ public class TaskController {
         Integer userID = sysService.userID(username);
         TCfgTask task = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgTask>(){}.getType());
         task.setOwner(userID);
+        if (task.getSeqId()==null)
+        {
+            task.setStatus(false);
+        }
         taskService.saveTask(task);
         return new Result().setMessage("保存成功");
     }
@@ -84,7 +88,10 @@ public class TaskController {
         TCfgPipeline pipeline = JwtTokenUtil.gson().fromJson(request,new TypeToken<TCfgPipeline>(){}.getType());
         pipeline.setOwner(userID);
         //默认流水线不开启 配置确认无误后手动开启
-        pipeline.setStatus(false);
+        if (pipeline.getSeqId()==null)
+        {
+            pipeline.setStatus(false);
+        }
         taskService.savePipeline(pipeline);
         return new Result().setMessage("保存成功");
     }
