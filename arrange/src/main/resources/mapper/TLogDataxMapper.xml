@@ -18,4 +18,11 @@
         ,task_id,exec_time,
         status,notes,end_time
     </sql>
+    <select id="selectPageVo" resultType="com.cyj.arrange.bean.vo.TLogDataxVO">
+        select cfg.name,log.* from t_cfg_task cfg join t_log_datax log on cfg.seq_id=log.task_id
+         where cfg.owner=#{ownerID}
+        <if test="taskName!=null and taskName!=''">
+            and cfg.name like concat('%',#{taskName},'%')
+        </if >
+    </select>
 </mapper>

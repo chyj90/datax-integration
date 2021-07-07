@@ -21,4 +21,10 @@
     <select id="findTaskByPipelineID" resultType="com.cyj.arrange.bean.vo.TCfgPipelineTaskVO">
         select tl.seq_id as ptid,tr.* from t_cfg_pipeline_task tl left join t_cfg_task tr on tl.task_id = tr.seq_id where tl.pipeline_id = #{pipelineID} order by tl.seq_id asc
     </select>
+    <update id="updateStatusBySeqId">
+update t_cfg_task
+ set status = #{status,jdbcType=BOOLEAN}
+where
+seq_id = #{seqId,jdbcType=NUMERIC}
+</update>
 </mapper>

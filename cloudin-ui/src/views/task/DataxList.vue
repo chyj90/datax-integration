@@ -9,6 +9,14 @@
       :data="loadData"
       showPagination="auto"
     >
+      <a-switch
+        slot="status"
+        slot-scope="text, record"
+        checked-children="开"
+        un-checked-children="关"
+        :checked="record.status == 1"
+        @change="switchStatus(record)"
+      />
       <span slot="operation" slot-scope="text, record">
         <template>
           <a-popconfirm
@@ -69,7 +77,7 @@
 </template>
 <script>
 import { STable } from '@/components'
-import { getDataxTaskList, saveTask, delTask } from '@/api/task'
+import { getDataxTaskList, saveTask, delTask, switchTaskStatus } from '@/api/task'
 import vueJsonEditor from 'vue-json-editor'
 export default {
   components: {
@@ -115,6 +123,12 @@ export default {
           dataIndex: 'jsonStr',
           width: '55%',
           ellipsis: true
+        },
+        {
+          title: '状态',
+          dataIndex: 'status',
+          width: '15%',
+          scopedSlots: { customRender: 'status' }
         },
         {
           title: '操作',
@@ -173,6 +187,15 @@ export default {
       saveTask(parameter).then((res) => {
         this.$message.info('保存成功')
         callback()
+      })
+    },
+    switchStatus (record) {
+      switchTaskStatus({
+        seqId: record.seqId,
+        status: !record.status
+      }).then(res => {
+        this.$message.info(res)
+        this.$refs.table.refresh()
       })
     }
   }

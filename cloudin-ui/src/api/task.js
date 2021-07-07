@@ -9,9 +9,11 @@ const api = {
     del_task: '/task/del/task',
     del_pipeline: '/task/del/pipeline',
     switch_pipeline_status: '/task/switch/pipeline/status',
+    switch_task_status: '/task/switch/task/status',
     save_pipeline: '/task/savePipeline',
     save_pipeline_task: '/task/savePipeTask',
-    del_pipeline_task: '/task/del/pipelineTask'
+    del_pipeline_task: '/task/del/pipelineTask',
+    task_log: '/task/list/logs'
 }
 
 export default api
@@ -107,6 +109,22 @@ export function delPipelineTask (parameter) {
 export function switchPipelineStatus (parameter) {
     return request({
         url: api.switch_pipeline_status,
+        method: 'get',
+        params: parameter
+    })
+}
+
+export function switchTaskStatus (parameter) {
+    return request({
+        url: api.switch_task_status,
+        method: 'get',
+        params: parameter
+    })
+}
+
+export function taskLog (parameter) {
+    return request({
+        url: api.task_log,
         method: 'get',
         params: parameter
     })

@@ -14,6 +14,8 @@ import java.util.List;
 @Component
 public interface TCfgTaskMapper extends BaseMapper<TCfgTask> {
     List<TCfgPipelineTaskVO> findTaskByPipelineID(@Param("pipelineID") Integer pipelineID);
+
+    int updateStatusBySeqId(@Param("status") Boolean status, @Param("seqId") Integer seqId);
 }
 
 

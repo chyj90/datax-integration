@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cyj.arrange.bean.vo.TCfgPipelineTaskVO;
 import com.cyj.arrange.bean.vo.TCfgPipelineVO;
+import com.cyj.arrange.bean.vo.TLogDataxVO;
 import com.cyj.arrange.entry.TCfgPipeline;
 import com.cyj.arrange.entry.TCfgPipelineTask;
 import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.mapper.TCfgPipelineMapper;
 import com.cyj.arrange.mapper.TCfgPipelineTaskMapper;
 import com.cyj.arrange.mapper.TCfgTaskMapper;
+import com.cyj.arrange.mapper.TLogDataxMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class TaskService {
 
     @Autowired
     TCfgPipelineTaskMapper tCfgPipelineTaskMapper;
+
+    @Autowired
+    TLogDataxMapper logDataxMapper;
 
     public void saveTask(TCfgTask task) {
         if (task.getSeqId() != null) {
@@ -88,6 +93,20 @@ public class TaskService {
         }
     }
 
+    /**
+     *
+     * @param taskID
+     * @param status
+     * 关闭/开启任务
+     */
+    public void setTaskStatus(Integer taskID,boolean status)
+    {
+        if (taskID!=null)
+        {
+            tCfgTaskMapper.updateStatusBySeqId(status,taskID);
+        }
+    }
+
     public void addPipelineTask(TCfgPipelineTask pipelineTask)
     {
         tCfgPipelineTaskMapper.insert(pipelineTask);
@@ -135,5 +154,11 @@ public class TaskService {
     public List<TCfgTask> queryAllTask(Integer userID)
     {
         return tCfgTaskMapper.selectList(new QueryWrapper<TCfgTask>().eq("owner",userID));
+    }
+
+    public IPage<TLogDataxVO> queryTaskLogsPager(String taskName, Integer ownerID, int pageNo, int pageSize)
+    {
+        Page<TLogDataxVO> page = new Page<>(pageNo,pageSize);
+        return logDataxMapper.selectPageVo(page,taskName,ownerID);
     }
 }

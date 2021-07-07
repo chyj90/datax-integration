@@ -141,10 +141,30 @@ public class TaskController {
         return new Result().setMessage("保存成功");
     }
 
+    @RequestMapping("/switch/task/status")
+    public Result switchTaskStatus(@RequestParam("seqId") Integer pipelineID,@RequestParam("status") Boolean status)
+    {
+        taskService.setTaskStatus(pipelineID,status);
+        return new Result().setMessage("保存成功");
+    }
+
     @RequestMapping("/pipeline/detail")
     public Result pipelineDatail(@RequestParam("seqId") Integer pipelineID)
     {
         TCfgPipelineVO vo = taskService.queryPipeline(pipelineID);
         return new Result().setMessage(vo);
+    }
+
+    @RequestMapping("/list/logs")
+    public Result taskLogsPagion(@RequestParam(value = "name",required = false) String taskName, @RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize) {
+        String username = SecurityUtil.userName();
+        Integer userID = sysService.userID(username);
+        if (userID!=null)
+        {
+            return new Result().setMessage(taskService.queryTaskLogsPager(taskName,userID,pageNo == null ? DEFAULT_PAGE : pageNo, pageSize == null ? DEFAULT_PAGE_SIZE : pageSize));
+        }else
+        {
+            return new Result().setCode(HttpStatus.FORBIDDEN.value()).setMessage("用户不存在");
+        }
     }
 }
