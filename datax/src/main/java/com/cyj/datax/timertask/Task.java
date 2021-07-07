@@ -1,6 +1,7 @@
 package com.cyj.datax.timertask;
 
 import com.alipay.sofa.jraft.rhea.util.concurrent.DistributedLock;
+import com.cyj.datax.Application;
 import com.cyj.datax.entry.TCfgTask;
 import com.cyj.datax.entry.TLogDatax;
 import com.cyj.datax.entry.TLogTask;
@@ -45,49 +46,52 @@ public class Task {
     @Scheduled(cron = "*/5 * * * * ?")
     @Async("pipelineExecutor")
     public void pickTask() {
-        DistributedLock lock = client.getlock(Client.TASK_LOCK);
-        TLogTask target = null;
-        try {
+        if (Application.isLockOK())
+        {
+            DistributedLock lock = client.getlock(Client.TASK_LOCK);
+            TLogTask target = null;
             if (lock.tryLock()) {
-                List<TLogTask> tasks = logTaskMapper.leftTask();
-                if (tasks != null && tasks.size() > 0) {
-                    TLogTask lastTask = null;
-                    for (TLogTask task : tasks) {
-                        if (target != null) {
-                            break;
-                        }
-                        if (task.getStartTime() == null) {
-                            if (lastTask == null) {
-                                target = task;
-                            } else {
-                                if (lastTask.getEndTime() != null) {
+                try{
+                    List<TLogTask> tasks = logTaskMapper.leftTask();
+                    if (tasks != null && tasks.size() > 0) {
+                        TLogTask lastTask = null;
+                        for (TLogTask task : tasks) {
+                            if (target != null) {
+                                break;
+                            }
+                            if (task.getStartTime() == null) {
+                                if (lastTask == null) {
                                     target = task;
+                                } else {
+                                    if (lastTask.getEndTime() != null) {
+                                        target = task;
+                                    }
                                 }
                             }
                         }
+                        if (target != null) {
+                            target.setStartTime(new Date());
+                            logTaskMapper.updateById(target);
+                        }
                     }
-                    if (target != null) {
-                        target.setStartTime(new Date());
-                        logTaskMapper.updateById(target);
-                    }
+                }finally {
+                    lock.unlock();
                 }
             }
-        } finally {
-            lock.unlock();
-        }
-        if (target != null) {
-            TCfgTask cfgTask = cfgTaskMapper.selectById(target.getTaskId());
-            // TODO: 2021/6/28 任务失败了怎么办
-            TLogDatax logDatax = new TLogDatax().setTaskId(cfgTask.getSeqId()).setExecTime(target.getStartTime());
-            logDataxMapper.insert(logDatax);
-            monitorProcessor.process(cfgTask.getJsonStr(),logDatax.getSeqId());
-            //处理完毕设置endtime
-            target.setEndTime(new Date());
-            logTaskMapper.updateById(target);
-            long maxTID = logTaskMapper.selectMaxTaskIDByPipelinelogID(target.getPipelineLogId());
-            if (target.getSeqId()==maxTID)
-            {
-                logPipelineMapper.updateStatusAndEndTimeBySeqId(true,target.getEndTime(),target.getPipelineLogId());
+            if (target != null) {
+                TCfgTask cfgTask = cfgTaskMapper.selectById(target.getTaskId());
+                // TODO: 2021/6/28 任务失败了怎么办
+                TLogDatax logDatax = new TLogDatax().setTaskId(cfgTask.getSeqId()).setExecTime(target.getStartTime());
+                logDataxMapper.insert(logDatax);
+                monitorProcessor.process(cfgTask.getJsonStr(),logDatax.getSeqId());
+                //处理完毕设置endtime
+                target.setEndTime(new Date());
+                logTaskMapper.updateById(target);
+                long maxTID = logTaskMapper.selectMaxTaskIDByPipelinelogID(target.getPipelineLogId());
+                if (target.getSeqId()==maxTID)
+                {
+                    logPipelineMapper.updateStatusAndEndTimeBySeqId(true,target.getEndTime(),target.getPipelineLogId());
+                }
             }
         }
     }

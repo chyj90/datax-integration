@@ -1,8 +1,10 @@
 package com.cyj.datax;
 
+import com.alipay.sofa.jraft.rhea.util.concurrent.DistributedLock;
 import com.cyj.datax.rheakv.Client;
 import com.cyj.datax.rheakv.Server;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.net.UnknownHostException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by chengyajie on 2021/6/7.
@@ -26,8 +29,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @SpringBootApplication
 @EnableAsync
 @MapperScan("com.cyj.datax.mapper")
+@Slf4j
 public class Application implements ApplicationListener<ContextRefreshedEvent> {
-    private static Logger logger = LoggerFactory.getLogger(Application.class);
     @Autowired
     Server rheakvServer;
 
@@ -35,6 +38,8 @@ public class Application implements ApplicationListener<ContextRefreshedEvent> {
     Client rheakvClient;
 
     public static ApplicationContext applicationContext;
+
+    private static boolean lockOK = false;
     public static void main(String[] args) throws UnknownHostException {
         applicationContext = SpringApplication.run(Application.class,args);
     }
@@ -79,8 +84,14 @@ public class Application implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if(event.getApplicationContext().getParent() == null){
-            rheakvServer.init();
             rheakvClient.init();
+            lockOK = true;
+            log.info("分布式锁初始化完成");
         }
+    }
+
+    public static boolean isLockOK()
+    {
+        return lockOK;
     }
 }

@@ -46,8 +46,6 @@ public class Client {
     @Value("${rheakv.cluster.name}")
     private String CLUSTER_NAME;
 
-    private boolean finish = false;
-
     public static String TASK_LOCK="lock_task";
 
     public DistributedLock<byte[]> getlock(String lockKey)
@@ -56,24 +54,20 @@ public class Client {
     }
 
     public void init() {
-        if (!finish)
-        {
-            finish = true;
-            final List<RegionRouteTableOptions> regionRouteTableOptionsList = MultiRegionRouteTableOptionsConfigured
-                    .newConfigured() //
-                    .withInitialServerList(-1L /* default id */, ALL_NODE_ADDRESSES) //
-                    .config();
-            final PlacementDriverOptions pdOpts = PlacementDriverOptionsConfigured.newConfigured() //
-                    .withFake(true) //
-                    .withRegionRouteTableOptionsList(regionRouteTableOptionsList) //
-                    .config();
-            final RheaKVStoreOptions opts = RheaKVStoreOptionsConfigured.newConfigured() //
-                    .withClusterName(CLUSTER_NAME) //
-                    .withPlacementDriverOptions(pdOpts) //
-                    .config();
-            System.out.println(opts);
-            rheaKVStore.init(opts);
-        }
+        final List<RegionRouteTableOptions> regionRouteTableOptionsList = MultiRegionRouteTableOptionsConfigured
+                .newConfigured() //
+                .withInitialServerList(-1L /* default id */, ALL_NODE_ADDRESSES) //
+                .config();
+        final PlacementDriverOptions pdOpts = PlacementDriverOptionsConfigured.newConfigured() //
+                .withFake(true) //
+                .withRegionRouteTableOptionsList(regionRouteTableOptionsList) //
+                .config();
+        final RheaKVStoreOptions opts = RheaKVStoreOptionsConfigured.newConfigured() //
+                .withClusterName(CLUSTER_NAME) //
+                .withPlacementDriverOptions(pdOpts) //
+                .config();
+        System.out.println(opts);
+        rheaKVStore.init(opts);
     }
 
     public void shutdown() {
