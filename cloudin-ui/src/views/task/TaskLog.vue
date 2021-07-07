@@ -9,14 +9,6 @@
       showPagination="auto"
     >
     </s-table>
-    <a-modal
-      title="任务详情"
-      :visible="visible"
-      :confirm-loading="confirmLoading"
-      @cancel="handleCancel"
-      width="820px"
-    >
-    </a-modal>
   </page-header-wrapper>
 </template>
 <script>
@@ -38,7 +30,6 @@ export default {
       queryParam: {},
       loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        console.log('loadData request parameters:', requestParameters)
         return taskLog(requestParameters).then((res) => {
           console.log(res)
           return res
@@ -52,30 +43,27 @@ export default {
         },
         {
           title: '任务描述',
-          dataIndex: 'name',
+          dataIndex: 'taskName',
           width: '15%'
         },
         {
-          title: 'Cron',
-          dataIndex: 'cron',
+          title: '开始时间',
+          dataIndex: 'execTime',
           width: '15%'
         },
         {
-          title: 'Json',
-          dataIndex: 'jsonStr',
-          width: '55%',
+          title: '结束时间',
+          dataIndex: 'endTime',
+          width: '15%',
           ellipsis: true
         },
         {
           title: '状态',
           dataIndex: 'status',
-          width: '15%',
-          scopedSlots: { customRender: 'status' }
+          width: '15%'
         },
         {
-          title: '操作',
-          dataIndex: 'operation',
-          scopedSlots: { customRender: 'operation' }
+          title: '备注'
         }
       ]
     }

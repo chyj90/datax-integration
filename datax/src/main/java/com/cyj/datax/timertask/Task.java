@@ -12,6 +12,7 @@ import com.cyj.datax.mapper.TLogTaskMapper;
 import com.cyj.datax.processor.MonitorProcessor;
 import com.cyj.datax.rheakv.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 @EnableScheduling
 @Component
+@ConditionalOnProperty(prefix = "pipeline",name = "status",havingValue = "true")
 public class Task {
 
     @Autowired

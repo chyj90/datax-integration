@@ -26,6 +26,12 @@ export const asyncRouterMap = [
             name: 'PipelineTask',
             component: () => import('@/views/task/PipelineList'),
             meta: { title: '任务流水线', keepAlive: true }
+          },
+          {
+            path: '/task/logs/:pageNo([1-9]\\d*)?',
+            name: 'TaskLog',
+            component: () => import('@/views/task/TaskLog'),
+            meta: { title: '任务日志', keepAlive: true }
           }
         ]
       }

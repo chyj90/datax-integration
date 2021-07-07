@@ -14,11 +14,10 @@ const request = axios.create({
 // 异常拦截处理器
 const errorHandler = (error) => {
   notification.error({
-    message: error.response.data,
-    description: '请求出错'
+    message: '请求出错',
+    description: error.response.data.message
   })
-  console.log(error)
-  return Promise.reject(error)
+  return Promise.reject(error.response.data.message)
 }
 
 // request interceptor
@@ -45,11 +44,7 @@ request.interceptors.response.use((response) => {
       }, 1500)
     })
   } else {
-    if (response.data.code !== 200) {
-      return Promise.reject(response.data.message)
-    } else {
-      return response.data.message
-    }
+    return response.data.message
   }
 }, errorHandler)
 
