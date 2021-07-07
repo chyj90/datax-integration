@@ -63,3 +63,5 @@ cloudin-ui/node_modules
 arrange/src/main/java/generator
 datax/src/main/java/generator
 election.dataPath/
+/rhea_db/db_-1_10001/
+/raft_data/raft_data_region_-1_10001/
