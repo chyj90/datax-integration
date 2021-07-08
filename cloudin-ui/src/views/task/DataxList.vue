@@ -121,7 +121,7 @@ export default {
         {
           title: 'Json',
           dataIndex: 'jsonStr',
-          width: '55%',
+          width: '40%',
           ellipsis: true
         },
         {

@@ -6,6 +6,8 @@ import com.cyj.arrange.entry.TCfgTask;
 import com.cyj.arrange.mapper.TCfgPipelineMapper;
 import com.cyj.arrange.mapper.TCfgTaskMapper;
 import com.cyj.arrange.service.ScheduleService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
@@ -46,7 +48,7 @@ public class CronTaskRegistrar implements DisposableBean {
 
     private Set<String> scheduleKeys = new HashSet<>();
 
-    private Map<String,ScheduledFuture> scheduledTasks = new ConcurrentHashMap<>();
+    private Map<String,TaskFuture> scheduledTasks = new ConcurrentHashMap<>();
 
     public void initScheduleTask()
     {
@@ -74,37 +76,55 @@ public class CronTaskRegistrar implements DisposableBean {
     public void addPipelineSchedule(TCfgPipeline cfgPipeline) {
         if (cfgPipeline.getStatus()&& StringUtils.isNotEmpty(cfgPipeline.getCron()))
         {
-            if (!scheduledTasks.containsKey(PIPELINE_PREFIX+cfgPipeline.getSeqId()))
+            String key = PIPELINE_PREFIX+cfgPipeline.getSeqId();
+            if (scheduledTasks.get(key)!=null)
+            {
+                TaskFuture taskFuture = scheduledTasks.get(key);
+                if (!cfgPipeline.getCron().equals(taskFuture.getCron()))
+                {
+                    this.removeCronTask(key);
+                }
+            }
+            if (!scheduledTasks.containsKey(key))
             {
                 CronTask cronTask = new CronTask(()->{
                     scheduleService.startPipeline(cfgPipeline.getSeqId());
                 },cfgPipeline.getCron());
                 ScheduledFuture future = scheduleCronTask(cronTask);
-                scheduledTasks.put(PIPELINE_PREFIX+cfgPipeline.getSeqId(),future);
+                scheduledTasks.put(key,new TaskFuture(future,cfgPipeline.getCron()));
             }
-            scheduleKeys.add(PIPELINE_PREFIX+cfgPipeline.getSeqId());
+            scheduleKeys.add(key);
         }
     }
 
     public void addTaskSchedule(TCfgTask cfgTask) {
         if (cfgTask.getStatus()&& StringUtils.isNotEmpty(cfgTask.getCron()))
         {
-            if (!scheduledTasks.containsKey(TASK_PREFIX+cfgTask.getSeqId()))
+            String key = TASK_PREFIX+cfgTask.getSeqId();
+            if (scheduledTasks.get(key)!=null)
+            {
+                TaskFuture taskFuture = scheduledTasks.get(key);
+                if (!cfgTask.getCron().equals(taskFuture.getCron()))
+                {
+                    this.removeCronTask(key);
+                }
+            }
+            if (!scheduledTasks.containsKey(key))
             {
                 CronTask cronTask = new CronTask(()->{
                     scheduleService.startTask(cfgTask.getSeqId());
                 },cfgTask.getCron());
                 ScheduledFuture future = scheduleCronTask(cronTask);
-                scheduledTasks.put(TASK_PREFIX+cfgTask.getSeqId(),future);
+                scheduledTasks.put(key,new TaskFuture(future,cfgTask.getCron()));
             }
-            scheduleKeys.add(TASK_PREFIX+cfgTask.getSeqId());
+            scheduleKeys.add(key);
         }
     }
 
     public void removeCronTask(String taskKey) {
-        ScheduledFuture future = this.scheduledTasks.remove(taskKey);
+        TaskFuture future = this.scheduledTasks.remove(taskKey);
         if (future != null){
-            future.cancel(false);
+            future.future.cancel(false);
         }
     }
 
@@ -115,9 +135,17 @@ public class CronTaskRegistrar implements DisposableBean {
 
     @Override
     public void destroy(){
-        for (ScheduledFuture future : this.scheduledTasks.values()) {
-            future.cancel(false);
+        for (TaskFuture future : this.scheduledTasks.values()) {
+            future.future.cancel(false);
         }
         this.scheduledTasks.clear();
+    }
+
+    @Data
+    @AllArgsConstructor
+    class TaskFuture<T>
+    {
+        ScheduledFuture<T> future;
+        String cron;
     }
 }

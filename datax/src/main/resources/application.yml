@@ -10,4 +10,4 @@ spring:
     password: DATAX#Arrange#2021
 eureka:
   client:
-    enabled: false
+    enabled: true
