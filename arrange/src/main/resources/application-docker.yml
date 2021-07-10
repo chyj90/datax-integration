@@ -1,0 +1,16 @@
+
+eureka:
+  instance:
+    hostname: ${host_name:eureka1}
+  client:
+    service-url:
+      defaultZone: ${eureka_zone:http://eureka2:8671/eureka/}
+server:
+  port: 8671
+election:
+  dataPath: /logs/data/
+  groupId: cloudin_arrange
+  serverIdStr: ${server_id:127.0.0.1:9672}
+  initialConfStr: ${server_cluster:127.0.0.1:9671,127.0.0.1:9672}
+
+

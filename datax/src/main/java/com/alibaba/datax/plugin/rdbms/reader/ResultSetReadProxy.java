@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Types;
+import com.alibaba.datax.common.element.Record;
 
 public class ResultSetReadProxy {
 	private static final Logger LOG = LoggerFactory

@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.alibaba.datax.common.element.Record;
 
 import java.io.*;
 import java.nio.charset.UnsupportedCharsetException;
