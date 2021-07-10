@@ -4,7 +4,8 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://eureka1:8671/eureka/,http://eureka2:8672/eureka/,http://eureka3:8673/eureka/
+#      defaultZone: http://eureka1:8671/eureka/,http://eureka2:8672/eureka/,http://eureka3:8673/eureka/
+      defaultZone: http://localhost:8761/eureka/
 rheakv:
   instance:
     port: 10003

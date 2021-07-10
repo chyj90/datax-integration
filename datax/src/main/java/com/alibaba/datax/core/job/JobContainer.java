@@ -106,8 +106,8 @@ public class JobContainer extends AbstractContainer {
 
         boolean hasException = false;
         boolean isDryRun = false;
+        TLogDatax logDatax = null;
         TLogDataxMapper logDataxMapper = Application.applicationContext.getBean(TLogDataxMapper.class);
-        TLogDatax logDatax = logDataxMapper.selectById(this.jobId);
         try {
             this.startTimeStamp = System.currentTimeMillis();
             isDryRun = configuration.getBool(CoreConstant.DATAX_JOB_SETTING_DRYRUN, false);
@@ -122,6 +122,7 @@ public class JobContainer extends AbstractContainer {
                 LOG.debug("jobContainer starts to do init ...");
                 this.init();
                 LOG.info("jobContainer starts to do prepare ...");
+                logDatax = logDataxMapper.selectById(this.jobId);
                 this.prepare();
                 LOG.info("jobContainer starts to do split ...");
                 this.totalStage = this.split();

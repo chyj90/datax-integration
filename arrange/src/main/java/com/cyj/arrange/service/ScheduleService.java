@@ -12,6 +12,7 @@ import com.cyj.arrange.mapper.TCfgPipelineMapper;
 import com.cyj.arrange.mapper.TCfgTaskMapper;
 import com.cyj.arrange.mapper.TLogPipelineMapper;
 import com.cyj.arrange.mapper.TLogTaskMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.List;
 
 @Service
 @EnableScheduling
+@Slf4j
 public class ScheduleService {
 
     @Autowired
@@ -101,6 +103,7 @@ public class ScheduleService {
     {
         if (Application.isLearder())
         {
+            log.info("更新定时任务配置");
             cronTaskRegistrar.initScheduleTask();
         }
     }
