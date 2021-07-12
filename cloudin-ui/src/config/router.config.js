@@ -25,13 +25,27 @@ export const asyncRouterMap = [
             path: '/task/pipeline/:pageNo([1-9]\\d*)?',
             name: 'PipelineTask',
             component: () => import('@/views/task/PipelineList'),
-            meta: { title: '任务流水线', keepAlive: true }
+            meta: { title: '任务流水线(Alpha)', keepAlive: true }
           },
           {
             path: '/task/logs/:pageNo([1-9]\\d*)?',
             name: 'TaskLog',
             component: () => import('@/views/task/TaskLog'),
             meta: { title: '任务日志', keepAlive: true }
+          }
+        ]
+      },
+      {
+        path: '/sys',
+        redirect: '/sys/users',
+        component: RouteView,
+        meta: { title: '系统管理', icon: 'form' },
+        children: [
+          {
+            path: '/sys/users/:pageNo([1-9]\\d*)?',
+            name: 'UserList',
+            component: () => import('@/views/user/UserList'),
+            meta: { title: '用户列表', keepAlive: true }
           }
         ]
       }

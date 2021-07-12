@@ -1,5 +1,6 @@
 <template>
   <page-header-wrapper>
+    <a-button class="editable-add-btn" @click="handleAdd"> 添加 </a-button>
     <s-table
       ref="table"
       size="default"
@@ -8,6 +9,9 @@
       :data="loadData"
       showPagination="auto"
     >
+      <span slot="status" slot-scope="text,record">
+        {{ record.status==2?"禁用":"正常" }}
+      </span>
       <span slot="operation" slot-scope="text, record">
         <template>
           <a-popconfirm
@@ -25,11 +29,33 @@
         </template>
       </span>
     </s-table>
+    <a-modal
+      title="新增用户"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @cancel="handleCancel"
+      width="820px"
+    >
+      <template slot="footer">
+        <a-button key="cancel" @click="handleCancel"> 取消 </a-button>
+        <a-button key="submit" type="primary" @click="handleOk">
+          保存
+        </a-button>
+      </template>
+      <a-form-model :form="form" layout="vertical">
+        <a-form-model-item label="账号">
+          <a-input v-model="form.username" placeholder="账号" />
+        </a-form-model-item>
+        <a-form-model-item label="密码">
+          <a-input v-model="form.password" placeholder="密码" />
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </page-header-wrapper>
 </template>
 <script>
 import { STable } from '@/components'
-import { deleteUser, listUser, changeUserStatus } from '@/api/manage'
+import { deleteUser, listUser, changeUserStatus, register } from '@/api/manage'
 export default {
   components: {
     STable
@@ -64,6 +90,7 @@ export default {
         {
           title: '状态',
           dataIndex: 'status',
+          scopedSlots: { customRender: 'status' },
           width: '10%'
         },
         {
@@ -76,6 +103,29 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    handleOk (e) {
+      this.confirmLoading = true
+      register(this.form)
+        .then((res) => {
+          this.visible = false
+          this.confirmLoading = false
+          this.$refs.table.refresh()
+        })
+        .catch((err) => {
+          this.confirmLoading = false
+          console.log(err)
+        })
+    },
+    handleCancel (e) {
+      this.visible = false
+    },
+    handleAdd () {
+      this.visible = true
+      this.form = {
+        username: '',
+        password: ''
+      }
+    },
     onDelete (key) {
       deleteUser({ seqId: key })
         .then((res) => {
