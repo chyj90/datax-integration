@@ -1,13 +1,12 @@
 version: '3.9'
 services:
   arrange-service1:
+    env_file: .env
     environment:
       - host_name=arrange-service1
       - eureka_zone=http://arrange-service2:8671/eureka/
       - server_id=arrange-service1:9671
       - server_cluster=arrange-service1:9671,arrange-service2:9671
-      - spring.profiles.active=docker
-      - docker_host_ip=192.168.122.107
     container_name: arrange-service1
     hostname: arrange-service1
     build: .
@@ -18,13 +17,12 @@ services:
       - /Users/chengyajie/data/n1:/logs/data
 
   arrange-service2:
+    env_file: .env
     environment:
      - host_name=arrange-service2
      - eureka_zone=http://arrange-service1:8671/eureka/
      - server_id=arrange-service2:9671
      - server_cluster=arrange-service1:9671,arrange-service2:9671
-     - spring.profiles.active=docker
-     - docker_host_ip=192.168.122.107
     container_name: arrange-service2
     hostname: arrange-service2
     build: .
@@ -33,4 +31,9 @@ services:
      - 19672:9671
     volumes:
      - /Users/chengyajie/data/n2:/logs/data
+
+networks:
+  default:
+    external:
+      name: cloudin
 

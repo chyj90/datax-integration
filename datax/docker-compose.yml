@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  datax-service1:
+    env_file: .env
+    container_name: datax-service1
+    hostname: datax-service1
+    build: .
+    ports:
+      - 18901:8901
+      - 19001:9001
+    volumes:
+      - /Users/chengyajie/data/x1/rhea_db:/rhea_db/
+      - /Users/chengyajie/data/x1/raft_data:/raft_data/
+
+  datax-service2:
+    env_file: .env
+    container_name: datax-service2
+    hostname: datax-service2
+    build: .
+    ports:
+     - 18902:8901
+     - 19002:9001
+    volumes:
+     - /Users/chengyajie/data/x2/rhea_db:/rhea_db/
+     - /Users/chengyajie/data/x2/raft_data:/raft_data/
+
+networks:
+  default:
+    external:
+      name: cloudin

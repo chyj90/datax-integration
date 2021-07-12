@@ -12,5 +12,3 @@ rheakv:
   cluster:
     name: cloudin-executor
     nodes: 127.0.0.1:10001
-pipeline:
-  status: false
