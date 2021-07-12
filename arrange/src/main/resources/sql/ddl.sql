@@ -93,3 +93,6 @@ create table if not exists t_sys_user_role
 )
 comment '用户-角色关系表';
 
+alter table cloudin.t_sys_user
+	add status int null comment '2 禁用 1 正常';
+
