@@ -9,10 +9,17 @@
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
             <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         seq_id,username,password,
-        nickname
+        nickname,status
     </sql>
+    <update id="updateStatusBySeqId">
+update t_sys_user
+ set status = #{status,jdbcType=NUMERIC}
+where
+seq_id = #{seqId,jdbcType=NUMERIC}
+</update>
 </mapper>

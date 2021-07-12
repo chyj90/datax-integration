@@ -22,11 +22,6 @@ export default {
     return {
       visible: false,
       confirmLoading: false,
-      form: {
-        seqId: '',
-        name: '',
-        jsonStr: ''
-      },
       queryParam: {},
       loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
@@ -63,7 +58,8 @@ export default {
           width: '15%'
         },
         {
-          title: '备注'
+          title: '备注',
+          dataIndex: 'notes'
         }
       ]
     }
@@ -92,8 +88,5 @@ export default {
 }
 .ant-modal-body {
   padding-top: 2px;
-}
-.jsoneditor-poweredBy {
-  display: none;
 }
 </style>
