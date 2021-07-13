@@ -3,7 +3,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:18671/eureka/,http://localhost:18672/eureka/
+      defaultZone: http://localhost:8761/eureka/
 rheakv:
   instance:
     port: 10001
