@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControllerExceptionHandleAdvice {
     @ExceptionHandler
     public Result handler(HttpServletRequest req, HttpServletResponse res, Exception e) {
+        e.printStackTrace();
         res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Result result = new Result();
         result.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
