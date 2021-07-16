@@ -20,5 +20,5 @@ public interface DataxClient {
     String metrics();
 
     @RequestLine("GET /actuator/metrics/{requiredMetricName}")
-    String metricValue(URI baseUri,@PathVariable(value = "requiredMetricName")String requiredMetricName);
+    String metricValue(URI baseUri,@Param(value = "requiredMetricName")String requiredMetricName);
 }
