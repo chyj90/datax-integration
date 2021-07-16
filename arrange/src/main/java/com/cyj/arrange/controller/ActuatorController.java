@@ -1,5 +1,6 @@
 package com.cyj.arrange.controller;
 
+import com.cyj.arrange.bean.MetricsEntry;
 import com.cyj.arrange.bean.Result;
 import com.cyj.arrange.feign.DataxClient;
 import com.google.common.reflect.TypeToken;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,15 +48,26 @@ public class ActuatorController {
     public Result collectMeticValue(@RequestBody String metics) throws URISyntaxException {
         List<String> meticsList = gson.fromJson(metics,new TypeToken<List<String>>(){}.getType());
         List<ServiceInstance> instances = discoveryClient.getInstances("server-datax");
-        List<String> rtn = new ArrayList<>();
+        List<Map<String,Object>> rtn = new ArrayList<>();
         for (ServiceInstance instance:instances)
         {
+            Map<String,Object> row = new HashMap<>();
+            row.put("seqId",instance.getInstanceId());
             for (String metric:meticsList)
             {
                 String rs = restTemplate.getForObject(instance.getUri().toString()+"/actuator/metrics/"+metric,String.class);
-                rtn.add(rs);
-            }
+                MetricsEntry entry = gson.fromJson(rs,new TypeToken<MetricsEntry>(){}.getType());
+                String metricName = entry.getName();
+                List<Map<String,Object>> values = entry.getMeasurements();
+                Object value = 0;
+                if (values!=null&&values.size()>0)
+                {
+                    value = values.get(0).get("value");
 
+                }
+                row.put(metricName,value);
+            }
+            rtn.add(row);
         }
         return new Result().setMessage(rtn);
     }

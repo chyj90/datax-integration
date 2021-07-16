@@ -6,7 +6,8 @@ const api = {
   register: '/user/register',
   list_user: '/user/list',
   delete_user: '/user/delete',
-  change_user_status: '/user/changeStatus'
+  change_user_status: '/user/changeStatus',
+  metric_list: '/monitor//metrics'
 }
 
 export default api
@@ -54,6 +55,14 @@ export function listUser (parameter) {
 export function changeUserStatus (parameter) {
   return request({
     url: api.change_user_status,
+    method: 'get',
+    params: parameter
+  })
+}
+
+export function metricList (parameter) {
+  return request({
+    url: api.metric_list,
     method: 'get',
     params: parameter
   })
