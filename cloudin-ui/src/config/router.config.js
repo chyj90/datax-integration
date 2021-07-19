@@ -46,6 +46,12 @@ export const asyncRouterMap = [
             name: 'UserList',
             component: () => import('@/views/user/UserList'),
             meta: { title: '用户列表', keepAlive: true }
+          },
+          {
+            path: '/sys/monitor',
+            name: 'Monitor',
+            component: () => import('@/views/system/Monitor'),
+            meta: { title: '监控列表', keepAlive: true }
           }
         ]
       }

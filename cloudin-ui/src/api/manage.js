@@ -7,7 +7,8 @@ const api = {
   list_user: '/user/list',
   delete_user: '/user/delete',
   change_user_status: '/user/changeStatus',
-  metric_list: '/monitor//metrics'
+  metric_list: '/monitor/metrics',
+  metric_value: '/monitor/values'
 }
 
 export default api
@@ -65,5 +66,13 @@ export function metricList (parameter) {
     url: api.metric_list,
     method: 'get',
     params: parameter
+  })
+}
+
+export function metricValue (parameter) {
+  return request({
+    url: api.metric_value,
+    method: 'post',
+    data: parameter
   })
 }

@@ -1,6 +1,7 @@
 package com.cyj.arrange.controller;
 
 import com.cyj.arrange.bean.MetricsEntry;
+import com.cyj.arrange.bean.Pager;
 import com.cyj.arrange.bean.Result;
 import com.cyj.arrange.feign.DataxClient;
 import com.google.common.reflect.TypeToken;
@@ -63,12 +64,24 @@ public class ActuatorController {
                 if (values!=null&&values.size()>0)
                 {
                     value = values.get(0).get("value");
-
+                    if (value instanceof Double)
+                    {
+                        if (metricName.contains("memory"))
+                        {
+                            value = (Double)value/(1024*1024);
+                        }
+                        double dvalue = ((Double) value).doubleValue();
+                        int ivalue = (int) dvalue;
+                        if (ivalue!=dvalue)
+                        {
+                            value = String.format("%.4f",value);
+                        }
+                    }
                 }
                 row.put(metricName,value);
             }
             rtn.add(row);
         }
-        return new Result().setMessage(rtn);
+        return new Result().setMessage(new Pager().setData(rtn));
     }
 }

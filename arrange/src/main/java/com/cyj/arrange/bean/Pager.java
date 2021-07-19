@@ -2,10 +2,14 @@ package com.cyj.arrange.bean;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@Accessors(chain = true)
 public class Pager {
     List data;
 
