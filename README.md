@@ -1,4 +1,4 @@
-# cloudin-data
+# cloudin-datax
 cloudin-data是在DataX之上开发的分布式数据同步工具，提供简单易用的
 操作界面，降低用户使用DataX的学习成本，提供可视化定时任务配置和监控的能力。用户可通过页面修改datax任务的执行时间和配置脚本，支持Oracle，PG，Mysql等数据源，支持实时查看数据同步日志。
 
