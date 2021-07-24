@@ -7,12 +7,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 简单任务日志
  * @TableName t_log_datax
  */
 @TableName(value ="t_log_datax")
+@Accessors(chain = true)
 @Data
 public class TLogDatax implements Serializable {
     /**
@@ -45,6 +47,11 @@ public class TLogDatax implements Serializable {
      * 完成时间
      */
     private Date endTime;
+
+    /**
+     * 关系表主键
+     */
+    private Integer cfgPipelineTaskId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

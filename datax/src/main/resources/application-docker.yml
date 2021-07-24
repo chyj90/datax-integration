@@ -5,11 +5,3 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${eureka_server:http://localhost:8761/eureka/}
-rheakv:
-  instance:
-    port: 9001
-    dbPath: /rhea_db/
-    dataPath: /raft_data/
-  cluster:
-    name: cloudin-executor
-    nodes: ${rheakv_nodes}

@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class TCfgPipelineTaskVO extends TCfgTask {
-    private Long ptid;
+    private Integer ptid;
 }

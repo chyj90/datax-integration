@@ -48,6 +48,11 @@ public class TLogDatax implements Serializable {
      */
     private Date endTime;
 
+    /**
+     * 关系表主键
+     */
+    private Integer cfgPipelineTaskId;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

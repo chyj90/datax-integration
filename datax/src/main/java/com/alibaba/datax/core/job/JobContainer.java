@@ -31,6 +31,7 @@ import com.alibaba.fastjson.JSON;
 import com.cyj.datax.Application;
 import com.cyj.datax.annotation.UserDef;
 import com.cyj.datax.entry.TLogDatax;
+import com.cyj.datax.feign.ArrangeClient;
 import com.cyj.datax.mapper.TLogDataxMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -106,8 +107,7 @@ public class JobContainer extends AbstractContainer {
 
         boolean hasException = false;
         boolean isDryRun = false;
-        TLogDatax logDatax = null;
-        TLogDataxMapper logDataxMapper = Application.applicationContext.getBean(TLogDataxMapper.class);
+        ArrangeClient arrangeClient = Application.applicationContext.getBean(ArrangeClient.class);
         try {
             this.startTimeStamp = System.currentTimeMillis();
             isDryRun = configuration.getBool(CoreConstant.DATAX_JOB_SETTING_DRYRUN, false);
@@ -122,7 +122,7 @@ public class JobContainer extends AbstractContainer {
                 LOG.debug("jobContainer starts to do init ...");
                 this.init();
                 LOG.info("jobContainer starts to do prepare ...");
-                logDatax = logDataxMapper.selectById(this.jobId);
+
                 this.prepare();
                 LOG.info("jobContainer starts to do split ...");
                 this.totalStage = this.split();
@@ -137,11 +137,7 @@ public class JobContainer extends AbstractContainer {
 
                 this.invokeHooks();
             }
-            if (logDatax!=null)
-            {
-                logDatax.setStatus(true).setEndTime(new Date());
-                logDataxMapper.updateById(logDatax);
-            }
+            arrangeClient.finishTask(true,this.jobId,null);
         } catch (Throwable e) {
             LOG.error("Exception when job run", e);
 
@@ -174,16 +170,12 @@ public class JobContainer extends AbstractContainer {
 
             Communication reportCommunication = CommunicationTool.getReportCommunication(communication, tempComm, this.totalStage);
             super.getContainerCommunicator().report(reportCommunication);
-            if (logDatax!=null)
-            {
-                ByteArrayOutputStream ots = new ByteArrayOutputStream();
-                try{
-                    e.printStackTrace(new PrintStream(ots));
-                } catch (Exception exception) {
-                }
-                logDatax.setStatus(false).setEndTime(new Date()).setNotes(ots.toString());
-                logDataxMapper.updateById(logDatax);
+            ByteArrayOutputStream ots = new ByteArrayOutputStream();
+            try{
+                e.printStackTrace(new PrintStream(ots));
+            } catch (Exception exception) {
             }
+            arrangeClient.finishTask(false,this.jobId,ots.toString());
             throw DataXException.asDataXException(
                     FrameworkErrorCode.RUNTIME_ERROR, e);
         } finally {

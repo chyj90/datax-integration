@@ -33,35 +33,6 @@ create table if not exists t_cfg_task
 )
 comment '任务表';
 
-create table if not exists t_log_pipeline
-(
-	seq_id bigint auto_increment comment '主键'
-		primary key,
-	pipeline_id int not null comment '流水线配置表主键',
-	start_time timestamp null comment '流水线开始时间',
-	end_time timestamp null comment '流水线结束时间',
-	status tinyint(1) not null comment '0 未完成 1 完成'
-)
-comment '流水线执行日志表';
-
-create index t_log_pipeline_status_index
-	on t_log_pipeline (status);
-
-create table if not exists t_log_task
-(
-	seq_id bigint auto_increment comment '主键'
-		primary key,
-	pipeline_log_id bigint not null comment '流水线日志表id',
-	task_id int null comment '任务配置表ID',
-	start_time timestamp null comment '任务开始时间',
-	end_time timestamp null comment '任务结束时间',
-	finish_detail varchar(1500) null comment '任务结束详情'
-)
-comment '任务日志表';
-
-create index t_log_task_pipeline_log_id_index
-	on t_log_task (pipeline_log_id);
-
 create table if not exists t_sys_role
 (
 	seq_id int auto_increment comment '主键'

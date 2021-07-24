@@ -14,17 +14,28 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        seq_id,name,json_str,
+        seq_id
+        ,name,json_str,
         owner,cron,status
     </sql>
 
     <select id="findTaskByPipelineID" resultType="com.cyj.arrange.bean.vo.TCfgPipelineTaskVO">
-        select tl.seq_id as ptid,tr.* from t_cfg_pipeline_task tl left join t_cfg_task tr on tl.task_id = tr.seq_id where tl.pipeline_id = #{pipelineID} order by tl.seq_id asc
+        select tl.seq_id as ptid, tr.*
+        from t_cfg_pipeline_task tl
+                 left join t_cfg_task tr on tl.task_id = tr.seq_id
+        where tl.pipeline_id = #{pipelineID}
+        order by tl.seq_id asc
     </select>
     <update id="updateStatusBySeqId">
-update t_cfg_task
- set status = #{status,jdbcType=BOOLEAN}
-where
-seq_id = #{seqId,jdbcType=NUMERIC}
-</update>
+        update t_cfg_task
+        set status = #{status,jdbcType=BOOLEAN}
+        where seq_id = #{seqId,jdbcType=NUMERIC}
+    </update>
+    <select id="selectNextCfgTaskByPipelineTaskId" resultType="com.cyj.arrange.bean.vo.TCfgPipelineTaskVO">
+        select cpt.seq_id as ptid,ct.*
+        from t_cfg_pipeline_task cpt
+                 left join t_cfg_task ct on cpt.task_id = ct.seq_id
+        where cpt.pipeline_id = (select cpt2.pipeline_id from t_cfg_pipeline_task cpt2 where cpt2.seq_id = #{relId})
+          and cpt.seq_id &gt; #{relId}
+    </select>
 </mapper>

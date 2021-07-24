@@ -30,10 +30,14 @@ public class TaskController {
     TLogDataxMapper logDataxMapper;
 
     @RequestMapping("/stream")
-    public String streamIO(@RequestParam("taskID") Integer taskID,@RequestParam("job") String job)
+    public String streamIO(@RequestParam("taskID") Integer taskID,@RequestParam("job") String job,@RequestParam("relID") Integer relID)
     {
         taskExecutor.execute(()->{
             TLogDatax logDatax = new TLogDatax().setTaskId(taskID).setExecTime(new Date());
+            if (relID!=null&&relID>0)
+            {
+                logDatax.setCfgPipelineTaskId(relID);
+            }
             logDataxMapper.insert(logDatax);
             monitorProcessor.process(job,logDatax.getSeqId());
         });

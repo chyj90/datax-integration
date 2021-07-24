@@ -11,11 +11,12 @@
         <result property="status" column="status" jdbcType="BOOLEAN"/>
         <result property="notes" column="notes" jdbcType="VARCHAR"/>
         <result property="endTime" column="end_time" jdbcType="VARCHAR"/>
+        <result property="cfgPipelineTaskId" column="cfg_pipeline_task_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         seq_id
         ,task_id,exec_time,
-        status,notes,end_time
+        status,notes,end_time,cfg_pipeline_task_id
     </sql>
 </mapper>

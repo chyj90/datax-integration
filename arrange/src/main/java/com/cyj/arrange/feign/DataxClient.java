@@ -14,7 +14,7 @@ import java.net.URI;
 @FeignClient(name = "server-datax",configuration = FeignClientConfig.class)
 public interface DataxClient {
     @RequestLine("GET /task/stream?taskID={taskID}&job={job}")
-    String exec(@Param("taskID") Integer taskID, @Param("job") String job);
+    String exec(@Param("taskID") Integer taskID, @Param("job") String job,@Param("relID") Integer relID);
 
     @RequestLine("GET /actuator/metrics")
     String metrics();

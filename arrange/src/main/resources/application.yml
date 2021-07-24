@@ -1,6 +1,6 @@
 spring:
   application:
-      name: eureka-server
+      name: arrange-server
   profiles:
     active: dev
   datasource:

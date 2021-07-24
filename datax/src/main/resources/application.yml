@@ -11,8 +11,6 @@ spring:
 eureka:
   client:
     enabled: true
-pipeline:
-  status: false
 management:
   endpoints:
     web:

@@ -1,0 +1,12 @@
+
+eureka:
+  instance:
+    hostname: ${host_name:eureka1}
+  client:
+    service-url:
+      defaultZone: ${eureka_zone:http://eureka2:8671/eureka/}
+server:
+  port: 8671
+
+
+

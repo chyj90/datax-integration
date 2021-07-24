@@ -11,6 +11,7 @@
     <modules>
         <module>datax</module>
         <module>arrange</module>
+        <module>eureka</module>
     </modules>
     <properties>
         <spring-boot.version>2.4.6</spring-boot.version>

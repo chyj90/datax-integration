@@ -11,12 +11,13 @@
         <result property="status" column="status" jdbcType="BOOLEAN"/>
         <result property="notes" column="notes" jdbcType="VARCHAR"/>
         <result property="endTime" column="end_time" jdbcType="VARCHAR"/>
+        <result property="cfgPipelineTaskId" column="cfg_pipeline_task_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         seq_id
         ,task_id,exec_time,
-        status,notes,end_time
+        status,notes,end_time,cfg_pipeline_task_id
     </sql>
     <select id="selectPageVo" resultType="com.cyj.arrange.bean.vo.TLogDataxVO">
         select cfg.name,log.* from t_cfg_task cfg join t_log_datax log on cfg.seq_id=log.task_id

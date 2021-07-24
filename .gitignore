@@ -65,4 +65,4 @@ datax/src/main/java/generator
 election.dataPath/
 /rhea_db/
 /raft_data/
-.env
+/eureka/target/

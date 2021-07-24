@@ -2,75 +2,82 @@ version: '3.9'
 services:
   arrange-service1:
     environment:
-      - host_name=arrange-service1
-      - eureka_zone=http://arrange-service2:8671/eureka/
       - server_id=arrange-service1:9671
       - server_cluster=arrange-service1:9671,arrange-service2:9671
       - data_path=${data_path}
       - spring.profiles.active=${profiles}
       - mysql_host=${mysql_host}
-      - docker_host_ip=${docker_host_ip}
+      - eureka_server=${eureka_server}
     container_name: arrange-service1
     hostname: arrange-service1
     build: ./arrange
     ports:
-      - 18671:8671
+      - 18801:8801
       - 19671:9671
     volumes:
       - ${data_path}/n1:/logs/data
 
   arrange-service2:
     environment:
-     - host_name=arrange-service2
-     - eureka_zone=http://arrange-service1:8671/eureka/
      - server_id=arrange-service2:9671
      - server_cluster=arrange-service1:9671,arrange-service2:9671
      - data_path=${data_path}
      - spring.profiles.active=${profiles}
      - mysql_host=${mysql_host}
-     - docker_host_ip=${docker_host_ip}
+     - eureka_server=${eureka_server}
     container_name: arrange-service2
     hostname: arrange-service2
     build: ./arrange
     ports:
-     - 18672:8671
+     - 18802:8801
      - 19672:9671
     volumes:
      - ${data_path}/n2:/logs/data
 
   datax-service1:
     environment:
-     - data_path=${data_path}
      - spring.profiles.active=${profiles}
      - mysql_host=${mysql_host}
-     - docker_host_ip=${docker_host_ip}
-    env_file: datax.env
+     - eureka_server=${eureka_server}
     container_name: datax-service1
     hostname: datax-service1
     build: ./datax
     ports:
       - 18901:8901
-      - 19001:9001
-    volumes:
-      - ${data_path}/x1/rhea_db:/rhea_db/
-      - ${data_path}/x1/raft_data:/raft_data/
 
   datax-service2:
     environment:
-     - data_path=${data_path}
      - spring.profiles.active=${profiles}
      - mysql_host=${mysql_host}
-     - docker_host_ip=${docker_host_ip}
-    env_file: datax.env
+     - eureka_server=${eureka_server}
     container_name: datax-service2
     hostname: datax-service2
     build: ./datax
     ports:
      - 18902:8901
-     - 19002:9001
-    volumes:
-      - ${data_path}/x2/rhea_db:/rhea_db/
-      - ${data_path}/x2/raft_data:/raft_data/
+
+  eureka-service1:
+    environment:
+      - host_name=eureka-service1
+      - eureka_zone=http://eureka-service2:8671/eureka/
+      - spring.profiles.active=${profiles}
+    container_name: eureka-service1
+    hostname: eureka-service1
+    build: ./eureka
+    ports:
+     - 18671:8671
+
+  eureka-service2:
+    environment:
+      - host_name=eureka-service2
+      - eureka_zone=http://eureka-service1:8671/eureka/
+      - spring.profiles.active=${profiles}
+    container_name: eureka-service2
+    hostname: eureka-service2
+    build: ./eureka
+    ports:
+     - 18672:8671
+
 
 networks:
   default:

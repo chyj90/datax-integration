@@ -1,8 +1,6 @@
 package com.cyj.datax;
 
 import com.alipay.sofa.jraft.rhea.util.concurrent.DistributedLock;
-import com.cyj.datax.rheakv.Client;
-import com.cyj.datax.rheakv.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -11,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -29,13 +28,9 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @EnableAsync
 @MapperScan("com.cyj.datax.mapper")
+@EnableFeignClients
 @Slf4j
 public class Application implements ApplicationListener<ContextRefreshedEvent> {
-    @Autowired
-    Server rheakvServer;
-
-    @Autowired
-    Client rheakvClient;
 
     public static ApplicationContext applicationContext;
 
@@ -44,23 +39,6 @@ public class Application implements ApplicationListener<ContextRefreshedEvent> {
         applicationContext = SpringApplication.run(Application.class,args);
     }
 
-    /**
-     * 流水线执行线程池
-     * @return
-     */
-    @Bean("pipelineExecutor")
-    public ThreadPoolTaskExecutor pipelineExecutor(){
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(10);
-        executor.setKeepAliveSeconds(60);
-        executor.setThreadNamePrefix("Pipe-Pool-");
-        // 线程池对拒绝任务的处理策略 直接丢弃不执行
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
-        executor.initialize();
-        return executor;
-    }
 
     /**
      * 普通任务执行线程池
@@ -84,14 +62,7 @@ public class Application implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if(event.getApplicationContext().getParent() == null){
-            rheakvClient.init();
-            lockOK = true;
-            log.info("分布式锁初始化完成");
         }
     }
 
-    public static boolean isLockOK()
-    {
-        return lockOK;
-    }
 }
