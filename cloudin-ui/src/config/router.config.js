@@ -36,6 +36,26 @@ export const asyncRouterMap = [
         ]
       },
       {
+        path: '/meta',
+        redirect: '/meta/datasource',
+        component: RouteView,
+        meta: { title: '元数据管理', icon: 'form' },
+        children: [
+          {
+            path: '/meta/datasource',
+            name: 'DSList',
+            component: () => import('@/views/meta/DataSource'),
+            meta: { title: '数据源管理', keepAlive: true }
+          },
+          {
+            path: '/meta/resolver/:pageNo([1-9]\\d*)?',
+            name: 'RSList',
+            component: () => import('@/views/meta/Resolver'),
+            meta: { title: '占位符管理', keepAlive: true }
+          }
+        ]
+      },
+      {
         path: '/sys',
         redirect: '/sys/users',
         component: RouteView,

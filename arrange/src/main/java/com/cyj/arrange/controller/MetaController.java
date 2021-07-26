@@ -13,7 +13,9 @@ import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 元数据管理
@@ -56,7 +58,9 @@ public class MetaController {
         String userName = SecurityUtil.userName();
         Integer userID = sysService.userID(userName);
         List<TCfgDatasource> list =  metaService.queryDataSource(userID,dsName);
-        return new Result().setMessage(list);
+        Map<String,Object> rs = new HashMap<>();
+        rs.put("data",list);
+        return new Result().setMessage(rs);
     }
 
     @GetMapping("/resolverPager")

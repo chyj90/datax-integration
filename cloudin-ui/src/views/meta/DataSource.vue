@@ -19,6 +19,12 @@
           >
             <a-button type="danger" size="small">删除</a-button>
           </a-popconfirm>
+          <a-divider type="vertical" />
+          <a-button
+            @click="handleEdit(record)"
+            type="primary"
+            size="small"
+          >编辑</a-button>
         </template>
       </span>
     </s-table>
@@ -36,11 +42,20 @@
         </a-button>
       </template>
       <a-form-model :form="form" layout="vertical">
-        <a-form-model-item label="账号">
-          <a-input v-model="form.username" placeholder="账号" />
+        <a-form-model-item label="名称">
+          <a-input v-model="form.dsName" placeholder="名称" />
+        </a-form-model-item>
+        <a-form-model-item label="链接">
+          <a-input v-model="form.url" placeholder="url" />
+        </a-form-model-item>
+        <a-form-model-item label="用户名">
+          <a-input v-model="form.userName" placeholder="用户名" />
         </a-form-model-item>
         <a-form-model-item label="密码">
-          <a-input v-model="form.password" placeholder="密码" />
+          <a-input v-model="form.passWord" placeholder="密码" />
+        </a-form-model-item>
+        <a-form-model-item label="驱动">
+          <a-input v-model="form.driverName" placeholder="驱动" />
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -58,6 +73,16 @@ export default {
       modalTitle: '新增数据源',
       visible: false,
       confirmLoading: false,
+      form: {
+        seqId: Number,
+        dsName: String,
+        url: String,
+        userName: String,
+        passWord: String,
+        driverName: String,
+        owner: Number,
+        status: Boolean
+      },
       queryParam: {},
       loadData: (parameter) => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
@@ -70,17 +95,18 @@ export default {
         {
           title: 'ID',
           dataIndex: 'seqId',
-          width: '10%'
+          width: '5%'
         },
         {
           title: '名称',
           dataIndex: 'dsName',
-          width: '20%'
+          width: '15%'
         },
         {
           title: 'URL',
           dataIndex: 'url',
-          width: '40%'
+          width: '40%',
+          ellipsis: true
         },
         {
           title: '用户名',
@@ -90,16 +116,55 @@ export default {
         {
           title: '驱动',
           dataIndex: 'driverName',
-          width: '20%'
+          width: '15%'
+        },
+        {
+          title: '操作',
+          scopedSlots: { customRender: 'operation' }
         }
       ]
     }
   },
   methods: {
+    handleOk (e) {
+      this.confirmLoading = true
+      saveDatasource(this.form)
+        .then((res) => {
+          this.visible = false
+          this.confirmLoading = false
+          this.$refs.table.refresh()
+        })
+        .catch((err) => {
+          this.confirmLoading = false
+          console.log(err)
+        })
+    },
+    handleEdit (record) {
+      this.modalTitle = '修改数据源'
+      Object.assign(this.form, record)
+      this.visible = true
+    },
+    handleAdd () {
+      this.modalTitle = '新增数据源'
+      this.visible = true
+      this.form = {
+        dsName: '',
+        url: '',
+        userName: '',
+        passWord: '',
+        driverName: '',
+        owner: 0,
+        status: true
+      }
+    },
+    handleCancel (e) {
+      this.visible = false
+    },
     onDelete (record) {
       record.status = false
       saveDatasource(record).then((res) => {
         this.$message.info('保存成功')
+        this.$refs.table.refresh()
       })
     }
   }
