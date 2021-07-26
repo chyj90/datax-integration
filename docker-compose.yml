@@ -37,7 +37,6 @@ services:
   datax-service1:
     environment:
      - spring.profiles.active=${profiles}
-     - mysql_host=${mysql_host}
      - eureka_server=${eureka_server}
     container_name: datax-service1
     hostname: datax-service1
@@ -48,7 +47,6 @@ services:
   datax-service2:
     environment:
      - spring.profiles.active=${profiles}
-     - mysql_host=${mysql_host}
      - eureka_server=${eureka_server}
     container_name: datax-service2
     hostname: datax-service2

@@ -3,6 +3,7 @@ package com.cyj.arrange.controller;
 import com.cyj.arrange.bean.Result;
 import com.cyj.arrange.mapper.TSysUserMapper;
 import com.cyj.arrange.service.SysService;
+import com.cyj.arrange.util.JwtTokenUtil;
 import com.cyj.arrange.util.SecurityUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,9 +15,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    @Autowired
-    Gson gson;
 
     @Autowired
     SysService sysService;
@@ -34,7 +32,7 @@ public class UserController {
     @PostMapping("/register")
     public Result registerUser(@RequestBody String body)
     {
-        Map<String,String> params = gson.fromJson(body,new TypeToken<Map<String,String>>(){}.getType());
+        Map<String,String> params = JwtTokenUtil.gson().fromJson(body,new TypeToken<Map<String,String>>(){}.getType());
         String username = params.get("username");
         String password = params.get("password");
         sysService.register(username,password);

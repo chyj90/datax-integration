@@ -37,6 +37,17 @@ public class ScheduleService {
 
     @Autowired
     DataxClient dataxClient;
+
+    public void callDatax(Integer cfgTaskId,String taskJSON,Integer cfgPipelineTaskId)
+    {
+        TLogDatax logDatax = new TLogDatax().setTaskId(cfgTaskId).setExecTime(new Date());
+        if (cfgPipelineTaskId!=null&&cfgPipelineTaskId>0)
+        {
+            logDatax.setCfgPipelineTaskId(cfgPipelineTaskId);
+        }
+        logDataxMapper.insert(logDatax);
+        dataxClient.exec(taskJSON,logDatax.getSeqId());
+    }
     /**
      *  启动流水线
      */
@@ -48,7 +59,7 @@ public class ScheduleService {
             List<TCfgPipelineTaskVO> tasks = tCfgTaskMapper.findTaskByPipelineID(pipelineID);
             if (tasks!=null&&tasks.size()>0)
             {
-                dataxClient.exec(tasks.get(0).getSeqId(),tasks.get(0).getJsonStr(),tasks.get(0).getPtid());
+                callDatax(tasks.get(0).getSeqId(),tasks.get(0).getJsonStr(),tasks.get(0).getPtid());
             }
         }
     }
@@ -59,7 +70,7 @@ public class ScheduleService {
         if (task.getStatus())
         {
             String json = task.getJsonStr();
-            dataxClient.exec(taskID,json,-1);
+            callDatax(taskID,json,-1);
         }
     }
 

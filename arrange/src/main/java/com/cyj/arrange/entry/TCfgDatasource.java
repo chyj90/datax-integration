@@ -1,4 +1,4 @@
-package com.cyj.datax.entry;
+package com.cyj.arrange.entry;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -8,12 +8,12 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * 任务表
- * @TableName t_cfg_task
+ * 
+ * @TableName t_cfg_datasource
  */
-@TableName(value ="t_cfg_task")
+@TableName(value ="t_cfg_datasource")
 @Data
-public class TCfgTask implements Serializable {
+public class TCfgDatasource implements Serializable {
     /**
      * 主键
      */
@@ -21,30 +21,39 @@ public class TCfgTask implements Serializable {
     private Integer seqId;
 
     /**
-     * 任务名
+     * 数据源名称
      */
-    private String name;
+    private String dsName;
 
     /**
-     * 任务详情
+     * 连接
      */
-    private String jsonStr;
+    private String url;
 
     /**
-     * 对应t_ci_user表seq_id
+     * 用户名
+     */
+    private String userName;
+
+    /**
+     * 密码
+     */
+    private String passWord;
+
+    /**
+     * 驱动
+     */
+    private String driverName;
+
+    /**
+     * 隶属用户
      */
     private Integer owner;
 
     /**
-     * cron表达式
-     */
-    private String cron;
-
-    /**
-     * 开始状态 0：关闭 1：开启
+     * 状态 0：关闭 1：开启
      */
     private Boolean status;
-
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

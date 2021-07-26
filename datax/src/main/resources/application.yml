@@ -3,11 +3,6 @@ spring:
       name: server-datax
   profiles:
     active: dev
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${mysql_host:localhost:3306}/cloudin?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: DATAX#Arrange#2021
 eureka:
   client:
     enabled: true

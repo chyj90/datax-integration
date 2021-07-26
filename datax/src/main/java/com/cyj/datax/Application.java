@@ -3,7 +3,6 @@ package com.cyj.datax;
 import com.alipay.sofa.jraft.rhea.util.concurrent.DistributedLock;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import java.util.concurrent.TimeUnit;
  */
 @SpringBootApplication
 @EnableAsync
-@MapperScan("com.cyj.datax.mapper")
 @EnableFeignClients
 @Slf4j
 public class Application implements ApplicationListener<ContextRefreshedEvent> {

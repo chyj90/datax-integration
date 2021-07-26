@@ -1,7 +1,5 @@
 package com.cyj.datax.controller;
 
-import com.cyj.datax.entry.TLogDatax;
-import com.cyj.datax.mapper.TLogDataxMapper;
 import com.cyj.datax.processor.MonitorProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,20 +24,12 @@ public class TaskController {
     @Autowired
     ThreadPoolTaskExecutor taskExecutor;
 
-    @Autowired
-    TLogDataxMapper logDataxMapper;
 
     @RequestMapping("/stream")
-    public String streamIO(@RequestParam("taskID") Integer taskID,@RequestParam("job") String job,@RequestParam("relID") Integer relID)
+    public String streamIO(@RequestParam("job") String job,@RequestParam("jobID") Long jobID)
     {
         taskExecutor.execute(()->{
-            TLogDatax logDatax = new TLogDatax().setTaskId(taskID).setExecTime(new Date());
-            if (relID!=null&&relID>0)
-            {
-                logDatax.setCfgPipelineTaskId(relID);
-            }
-            logDataxMapper.insert(logDatax);
-            monitorProcessor.process(job,logDatax.getSeqId());
+            monitorProcessor.process(job,jobID);
         });
         return "OK";
     }

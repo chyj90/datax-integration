@@ -4,7 +4,6 @@ import com.cyj.arrange.config.filter.TokenAuthenticationFilter;
 import com.cyj.arrange.config.filter.TokenLoginFilter;
 import com.cyj.arrange.config.handler.ForbiddenEntryPoint;
 import com.cyj.arrange.config.handler.UnauthorizedEntryPoint;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

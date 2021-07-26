@@ -5,6 +5,7 @@ import com.cyj.arrange.entry.TLogDatax;
 import com.cyj.arrange.feign.DataxClient;
 import com.cyj.arrange.mapper.TCfgTaskMapper;
 import com.cyj.arrange.mapper.TLogDataxMapper;
+import com.cyj.arrange.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public class CallbackController {
     TCfgTaskMapper cfgTaskMapper;
 
     @Autowired
-    DataxClient dataxClient;
+    ScheduleService scheduleService;
     @RequestMapping("/finishTask")
     public String finishTask(@RequestParam("success") Boolean success, @RequestParam("jobId") Long jobId, @RequestParam("note") String note)
     {
@@ -40,7 +41,7 @@ public class CallbackController {
                List<TCfgPipelineTaskVO> tasks = cfgTaskMapper.selectNextCfgTaskByPipelineTaskId(logDatax.getCfgPipelineTaskId());
                if (tasks.size()>0)
                {
-                   dataxClient.exec(tasks.get(0).getSeqId(),tasks.get(0).getJsonStr(),tasks.get(0).getPtid());
+                   scheduleService.callDatax(tasks.get(0).getSeqId(),tasks.get(0).getJsonStr(),tasks.get(0).getPtid());
                }
             }
         }else

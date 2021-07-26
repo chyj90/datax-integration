@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyj.arrange.mapper.TCfgResolverMapper">
+
+    <resultMap id="BaseResultMap" type="com.cyj.arrange.entry.TCfgResolver">
+        <id property="seqId" column="seq_id" jdbcType="INTEGER"/>
+        <result property="resolverName" column="resolver_name" jdbcType="VARCHAR"/>
+        <result property="datasourceId" column="datasource_id" jdbcType="INTEGER"/>
+        <result property="express" column="express" jdbcType="VARCHAR"/>
+        <result property="owner" column="owner" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        seq_id,resolver_name,datasource_id,
+        express,owner,status
+    </sql>
+    <select id="selectPageVo" resultType="com.cyj.arrange.bean.vo.TCfgResolverVO">
+        select * from t_cfg_resolver tr left join t_cfg_datasource td on tr.datasource_id=td.seq_id
+        where tr.owner = #{owner} and tr.status = 1
+        <if test="resolverName!=null and resolverName!=''">
+            and tr.resolver_name like concat('%',#{resolverName},'%')
+        </if >
+    </select>
+</mapper>

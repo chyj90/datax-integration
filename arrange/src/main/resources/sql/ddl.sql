@@ -67,3 +67,36 @@ comment '用户-角色关系表';
 alter table cloudin.t_sys_user
 	add status int null comment '2 禁用 1 正常';
 
+create table if not exists cloudin.t_cfg_datasource
+(
+    seq_id int auto_increment
+        primary key,
+    ds_name varchar(255) null comment '数据源名称',
+    url varchar(255) null comment '连接',
+    user_name varchar(255) null comment '用户名',
+    pass_word varchar(255) null comment '密码',
+    driver_name varchar(255) null comment '驱动',
+    owner int null comment '隶属用户',
+    status tinyint null comment '状态 1启用 0不启用'
+);
+
+create table if not exists cloudin.t_cfg_resolver
+(
+    seq_id int auto_increment
+        primary key,
+    resolver_name varchar(255) null comment '占位符名称',
+    datasource_id int null comment '数据源主键',
+    express varchar(1000) null comment 'sql表达式',
+    owner int null comment '隶属用户',
+    status tinyint null comment '状态 1启用 0不启用'
+)
+    comment '占位符配置';
+
+create index t_cfg_resolver_resolver_name_owner_status_index
+    on cloudin.t_cfg_resolver (resolver_name, owner, status);
+
+
+
+
+
+

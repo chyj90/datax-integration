@@ -4,6 +4,7 @@ import com.cyj.arrange.bean.MetricsEntry;
 import com.cyj.arrange.bean.Pager;
 import com.cyj.arrange.bean.Result;
 import com.cyj.arrange.feign.DataxClient;
+import com.cyj.arrange.util.JwtTokenUtil;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -34,20 +35,18 @@ public class ActuatorController {
     @Autowired
     RestTemplate restTemplate;
 
-    @Autowired
-    Gson gson;
     @GetMapping("/metrics")
     public Result listMetrics()
     {
         String metics = dataxClient.metrics();
-        Map<String, List<String>> names = gson.fromJson(metics,new TypeToken<Map<String, List<String>>>(){}.getType());
+        Map<String, List<String>> names = JwtTokenUtil.gson().fromJson(metics,new TypeToken<Map<String, List<String>>>(){}.getType());
         List<String> meticsNames = names.get("names");
         return new Result().setMessage(meticsNames);
     }
 
     @PostMapping("/values")
     public Result collectMeticValue(@RequestBody String metics) throws URISyntaxException {
-        List<String> meticsList = gson.fromJson(metics,new TypeToken<List<String>>(){}.getType());
+        List<String> meticsList = JwtTokenUtil.gson().fromJson(metics,new TypeToken<List<String>>(){}.getType());
         List<ServiceInstance> instances = discoveryClient.getInstances("server-datax");
         List<Map<String,Object>> rtn = new ArrayList<>();
         for (ServiceInstance instance:instances)
@@ -57,7 +56,7 @@ public class ActuatorController {
             for (String metric:meticsList)
             {
                 String rs = restTemplate.getForObject(instance.getUri().toString()+"/actuator/metrics/"+metric,String.class);
-                MetricsEntry entry = gson.fromJson(rs,new TypeToken<MetricsEntry>(){}.getType());
+                MetricsEntry entry = JwtTokenUtil.gson().fromJson(rs,new TypeToken<MetricsEntry>(){}.getType());
                 String metricName = entry.getName();
                 List<Map<String,Object>> values = entry.getMeasurements();
                 Object value = 0;
