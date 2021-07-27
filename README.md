@@ -6,7 +6,7 @@ cloudin-datax是在DataX之上开发的分布式数据同步工具，提供简�
 
 # 软件架构
 
-![](https://images.gitee.com/uploads/images/2021/0715/100349_dfd6044d_9012733.png "未命名文件-2.png")
+![](https://images.gitee.com/uploads/images/2021/0727/225626_a3e1f92e_9012733.png "6.png")
 
 # 系统要求
 
