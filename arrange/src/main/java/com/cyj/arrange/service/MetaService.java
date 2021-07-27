@@ -60,4 +60,14 @@ public class MetaService {
         Page<TCfgResolverVO> page = new Page<>(pageNo,pageSize);
         return resolverMapper.selectPageVo(page,resolverName,owner);
     }
+
+    public TCfgResolver getResolver(String resolverName)
+    {
+        return resolverMapper.selectOne(new QueryWrapper<TCfgResolver>().eq("resolver_name",resolverName));
+    }
+
+    public TCfgDatasource getDatasource(Integer seqId)
+    {
+        return datasourceMapper.selectById(seqId);
+    }
 }
