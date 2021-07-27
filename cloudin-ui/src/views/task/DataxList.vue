@@ -127,7 +127,7 @@ export default {
         {
           title: '状态',
           dataIndex: 'status',
-          width: '15%',
+          width: '10%',
           scopedSlots: { customRender: 'status' }
         },
         {
