@@ -38,6 +38,14 @@
       </span>
     </s-table>
     <a-modal
+      title="配置向导"
+      :visible="navVisible"
+      @cancel="navCancel"
+      width="820px"
+    >
+      <oracle-reader-step :datasources="datasources" name="oraclereader"></oracle-reader-step>
+    </a-modal>
+    <a-modal
       title="任务详情"
       :visible="visible"
       :confirm-loading="confirmLoading"
@@ -48,6 +56,9 @@
         <a-button key="cancel" @click="handleCancel"> 取消 </a-button>
         <a-button key="submit" type="primary" @click="handleOk">
           保存
+        </a-button>
+        <a-button key="nav" type="primary" @click="openNavigator">
+          向导
         </a-button>
       </template>
       <a-form-model :form="form" layout="vertical">
@@ -77,17 +88,27 @@
 </template>
 <script>
 import { STable } from '@/components'
-import { getDataxTaskList, saveTask, delTask, switchTaskStatus } from '@/api/task'
+import {
+  getDataxTaskList,
+  saveTask,
+  delTask,
+  switchTaskStatus
+} from '@/api/task'
+import { queryDatasources } from '@/api/meta'
 import vueJsonEditor from 'vue-json-editor'
+import { OracleReaderStep } from '@/components/stepForm'
 export default {
   components: {
     STable,
-    vueJsonEditor
+    vueJsonEditor,
+    OracleReaderStep
   },
   data () {
     return {
       visible: false,
+      navVisible: false,
       confirmLoading: false,
+      datasources: [],
       form: {
         seqId: '',
         name: '',
@@ -152,6 +173,9 @@ export default {
     handleCancel (e) {
       this.visible = false
     },
+    navCancel (e) {
+      this.navVisible = false
+    },
     onDelete (key) {
       delTask({ seqId: key })
         .then((res) => {
@@ -193,9 +217,15 @@ export default {
       switchTaskStatus({
         seqId: record.seqId,
         status: !record.status
-      }).then(res => {
+      }).then((res) => {
         this.$message.info(res)
         this.$refs.table.refresh()
+      })
+    },
+    openNavigator () {
+      queryDatasources().then((res) => {
+        this.datasources = res.data
+        this.navVisible = true
       })
     }
   }
