@@ -30,6 +30,7 @@ cloudin-datax是在DataX之上开发的分布式数据同步工具，提供简�
 - 12、任务失败重试：支持自定义任务失败重试次数，当任务失败时将会按照预设的失败重试次数主动进行重试；
 - 13、添加执行器CPU、内存、负载的监控页面；
 - 14、定时增量同步；
+- 15、提供配置json可视化向导
 
 
 # 即将完善功能
@@ -42,6 +43,8 @@ cloudin-datax是在DataX之上开发的分布式数据同步工具，提供简�
 ![](https://images.gitee.com/uploads/images/2021/0727/221348_0d3b451d_9012733.png "1.png")
 ![](https://images.gitee.com/uploads/images/2021/0727/221501_75712f60_9012733.png "1-1.png")
 任务模板配置后 调度模块会根据cron表达式调度datax模块启动任务 配置json中可使用${xxx}占位符 占位符在执行前根据配置的sql解析成对应的值进行替换 占位符配置见下面
+新增可视化配置向导 目前支持 oracle reader/writer stream writer 后续会继续扩充
+![](https://images.gitee.com/uploads/images/2021/0801/150607_556e8e70_9012733.png "1.png")
 
 ### 2.数据源配置
 ![](https://images.gitee.com/uploads/images/2021/0727/221856_15deca12_9012733.png "2.png")
