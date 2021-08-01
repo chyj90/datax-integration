@@ -39,11 +39,12 @@
     </s-table>
     <a-modal
       title="配置向导"
-      :visible="navVisible"
+      :visible="readerVisible"
       @cancel="navCancel"
       width="820px"
+      :footer="null"
     >
-      <oracle-reader-step :datasources="datasources" name="oraclereader"></oracle-reader-step>
+      <datax-step :datasources="datasources" @finish="confirmJSON"></datax-step>
     </a-modal>
     <a-modal
       title="任务详情"
@@ -76,6 +77,7 @@
             <a-col :span="24">
               <vue-json-editor
                 v-model="form.jsonStr"
+                :mode="'code'"
                 :showBtns="false"
                 lang="zh"
               />
@@ -96,17 +98,17 @@ import {
 } from '@/api/task'
 import { queryDatasources } from '@/api/meta'
 import vueJsonEditor from 'vue-json-editor'
-import { OracleReaderStep } from '@/components/stepForm'
+import { DataxStep } from '@/components/stepForm'
 export default {
   components: {
     STable,
     vueJsonEditor,
-    OracleReaderStep
+    DataxStep
   },
   data () {
     return {
       visible: false,
-      navVisible: false,
+      readerVisible: false,
       confirmLoading: false,
       datasources: [],
       form: {
@@ -174,7 +176,7 @@ export default {
       this.visible = false
     },
     navCancel (e) {
-      this.navVisible = false
+      this.readerVisible = false
     },
     onDelete (key) {
       delTask({ seqId: key })
@@ -225,13 +227,18 @@ export default {
     openNavigator () {
       queryDatasources().then((res) => {
         this.datasources = res.data
-        this.navVisible = true
+        this.readerVisible = true
       })
+    },
+    confirmJSON (config) {
+      console.log(config)
+      this.form.jsonStr = config
+      this.readerVisible = false
     }
   }
 }
 </script>
-<style>
+<style lang="less" scoped>
 .editable-add-btn {
   margin-bottom: 8px;
 }
@@ -241,7 +248,10 @@ export default {
 .ant-modal-body {
   padding-top: 2px;
 }
-.jsoneditor-poweredBy {
+/deep/.jsoneditor-poweredBy {
   display: none;
+}
+/deep/ .ace-jsoneditor.ace_editor {
+  min-height: 400px;
 }
 </style>

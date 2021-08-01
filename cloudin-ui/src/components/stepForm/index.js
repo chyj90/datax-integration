@@ -1,5 +1,5 @@
-import OracleReaderStep from './OracleReaderStep'
+import DataxStep from './DataxStep'
 
 export {
-    OracleReaderStep
+    DataxStep
 }

@@ -73,14 +73,61 @@
           </a-form-model-item>
         </div>
         <div v-show="current == 2">
-          <a-form-model-item v-bind="formItemLayout">
-            <a-input v-model="form.splitPk" placeholder="splitPk" />
+          <a-form-model-item
+            v-for="(entry, index) in form.preSql"
+            :key="entry.key"
+            :prop="'preSql.' + index + '.value'"
+            v-bind="formItemLayout"
+            :rules="{
+              required: true,
+              message: 'SQL不能为空',
+              trigger: 'blur',
+            }"
+          >
+            <a-input
+              v-model="entry.value"
+              placeholder="SQL"
+              style="width: 90%; margin-right: 8px"
+            />
+            <a-icon
+              v-if="form.preSql.length > 0"
+              class="dynamic-delete-button"
+              type="minus-circle-o"
+              @click="removePreSql(entry)"
+            />
           </a-form-model-item>
           <a-form-model-item v-bind="formItemLayout">
-            <a-input v-model="form.where" placeholder="where" />
+            <a-button type="dashed" style="width: 100%" @click="addPreSql">
+              <a-icon type="plus" /> Add PreSQL
+            </a-button>
+          </a-form-model-item>
+          <a-form-model-item
+            v-for="(entry, index) in form.postSql"
+            :key="entry.key"
+            :prop="'postSql.' + index + '.value'"
+            v-bind="formItemLayout"
+            :rules="{
+              required: true,
+              message: 'SQL不能为空',
+              trigger: 'blur',
+            }"
+          >
+            <a-input
+              v-model="entry.value"
+              placeholder="SQL"
+              style="width: 90%; margin-right: 8px"
+            />
+            <a-icon
+              v-if="form.postSql.length > 0"
+              class="dynamic-delete-button"
+              type="minus-circle-o"
+              @click="removePostSql(entry)"
+            />
           </a-form-model-item>
           <a-form-model-item v-bind="formItemLayout">
-            <a-input v-model="form.querySql" placeholder="querySql" />
+            <a-button type="dashed" style="width: 100%" @click="addPostSql">
+              <a-icon type="plus" /> Add PostSQL
+            </a-button>
           </a-form-model-item>
         </div>
         <div v-show="current == 3 || current == 100">
@@ -114,7 +161,7 @@
 <script>
 import vueJsonEditor from 'vue-json-editor'
 export default {
-  name: 'OracleReaderStep',
+  name: 'OracleWriterStep',
   components: {
     vueJsonEditor
   },
@@ -134,9 +181,8 @@ export default {
       form: {
         tables: [],
         columns: [],
-        splitPk: '',
-        where: '',
-        querySql: ''
+        preSql: [],
+        postSql: []
       },
       formItemLayout: {
         wrapperCol: {
@@ -195,6 +241,30 @@ export default {
         key: Date.now()
       })
     },
+    removePreSql (item) {
+      const index = this.form.preSql.indexOf(item)
+      if (index !== -1) {
+        this.form.preSql.splice(index, 1)
+      }
+    },
+    addPreSql () {
+      this.form.preSql.push({
+        value: '',
+        key: Date.now()
+      })
+    },
+    removePostSql (item) {
+      const index = this.form.postSql.indexOf(item)
+      if (index !== -1) {
+        this.form.postSql.splice(index, 1)
+      }
+    },
+    addPostSql () {
+      this.form.postSql.push({
+        value: '',
+        key: Date.now()
+      })
+    },
     genJSON () {
       const ds = this.datasources.find(
         (ele) => ele.seqId === this.form.datasourceId
@@ -213,20 +283,24 @@ export default {
         jsonOBJ.connection = [
           {
             table: [],
-            jdbcUrl: [ds.url]
+            jdbcUrl: ds.url
           }
         ]
         this.form.tables.forEach((ele) => {
           jsonOBJ.connection[0].table.push(ele.value)
         })
-        if (this.form.splitPk) {
-          jsonOBJ.splitPk = this.form.splitPk
+        if (this.form.preSql.length > 0) {
+          jsonOBJ.preSql = []
+          this.form.preSql.forEach((ele) => {
+            jsonOBJ.preSql.push(ele.value)
+          })
         }
-        if (this.form.where) {
-          jsonOBJ.where = this.form.where
-        }
-        if (this.form.querySql) {
-          jsonOBJ.querySql = this.form.querySql
+
+        if (this.form.postSql.length > 0) {
+          jsonOBJ.postSql = []
+          this.form.postSql.forEach((ele) => {
+            jsonOBJ.postSql.push(ele.value)
+          })
         }
         this.template = { name: this.name, parameter: jsonOBJ }
       }
